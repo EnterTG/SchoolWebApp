@@ -6,3 +6,6 @@ insert into users (id, email, name, password, role) VALUES (2, 'baker@holon-plat
 insert into roles (id, description) VALUES ('admin', 'Administrator');
 insert into roles (id, description) VALUES ('teacher', 'Teacher');
 
+insert into classtype (id, description) VALUES ('dzienne', 'Dzienne');
+insert into classtype (id, description) VALUES ('zaoczne', 'Zaoczne');
+insert into classtype (id, description) VALUES ('weekendowe', 'Weekendowe');

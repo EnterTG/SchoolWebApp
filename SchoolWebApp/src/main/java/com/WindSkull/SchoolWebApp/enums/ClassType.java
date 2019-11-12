@@ -3,7 +3,7 @@ package com.WindSkull.SchoolWebApp.enums;
 public enum ClassType {
 
 	
-	WEEKEND("weekend"),DAY("day"),EXTERNAL("external");
+	WEEKEND("weekendowe"),DAY("dzienne"),EXTERNAL("zaoczne");
 	
 	private String type;
 	

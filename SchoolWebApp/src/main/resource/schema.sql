@@ -11,12 +11,17 @@ create table roles (
   description varchar(500) not null
 );
 
+create table classtype (
+  id varchar(300) primary key,
+  description varchar(500) not null
+);
+
 create table classes (
   id int auto_increment primary key,
   name varchar(500) not null,
   semester numeric (15,3) not null,
   classtype varchar(500) not null,
-  createyear date not null
+  createyear int not null
 );
 
 create table classstudents (

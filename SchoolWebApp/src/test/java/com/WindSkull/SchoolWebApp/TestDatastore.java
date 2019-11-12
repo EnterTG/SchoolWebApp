@@ -32,6 +32,7 @@ public class TestDatastore {
 	
 	@Test
 	public void testDatastore() {
+		assertNotNull(datastore);
 		testSave();
 	}
 	
@@ -42,9 +43,8 @@ public class TestDatastore {
 				.set(NAME, "Test")
 				.set(SEMESTER, 1)
 				.set(TYPE, DAY.name())
-				.set(CREATEYEAR, LocalDate.now()).build();
+				.set(CREATEYEAR, LocalDate.now().getYear()).build();
 		
-		assertNotNull(schoolclass);
 		OperationResult result = datastore.save(TARGET, schoolclass);
 		assertEquals(1, result.getAffectedCount());
 		

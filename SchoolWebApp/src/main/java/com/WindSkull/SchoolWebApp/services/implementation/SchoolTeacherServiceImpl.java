@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.WindSkull.SchoolWebApp.models.SchoolTeacher;
 import com.WindSkull.SchoolWebApp.services.SchoolTeacherService;
@@ -14,7 +15,7 @@ import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.PropertyBox;
-
+@Service
 public class SchoolTeacherServiceImpl implements SchoolTeacherService {
 
 	@Autowired

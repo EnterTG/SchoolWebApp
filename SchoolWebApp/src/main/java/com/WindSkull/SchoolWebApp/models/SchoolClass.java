@@ -1,7 +1,5 @@
 package com.WindSkull.SchoolWebApp.models;
 
-import java.time.LocalDate;
-
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.i18n.Localizable;
@@ -9,7 +7,6 @@ import com.holonplatform.core.property.NumericProperty;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.core.property.StringProperty;
-import com.holonplatform.core.property.TemporalProperty;
 
 public interface SchoolClass 
 {
@@ -21,7 +18,7 @@ public interface SchoolClass
 			.withValidator(Validator.notNull(Localizable.builder().message("Semestr jest wymagany").build()));
 	public static final StringProperty TYPE = StringProperty.create("classtype").message("Typ")
 			.withValidator(Validator.notBlank(Localizable.builder().message("Typ klasy jest wymagany").build()));
-	public static final TemporalProperty<LocalDate> CREATEYEAR = TemporalProperty.create("createyear", LocalDate.class).message("Rok utorzenia")
+	public static final NumericProperty<Integer> CREATEYEAR = NumericProperty.create("createyear", Integer.class).message("Rok utorzenia")
 			.withValidator(Validator.notNull(Localizable.builder().message("Rok utworzenia jest wymagany").build()));;
 
 
