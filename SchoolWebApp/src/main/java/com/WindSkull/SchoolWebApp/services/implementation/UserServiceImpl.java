@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.WindSkull.SchoolWebApp.models.User;
 import com.WindSkull.SchoolWebApp.services.UserService;
 import com.holonplatform.core.datastore.Datastore;
-import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.datastore.Datastore.OperationResult;
+import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.PropertyBox;
 

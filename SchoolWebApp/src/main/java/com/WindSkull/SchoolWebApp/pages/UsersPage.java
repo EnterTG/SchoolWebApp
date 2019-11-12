@@ -115,9 +115,9 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 										1d)
 										.addAndExpand(
 												btnDiscard = Components
-														.button().text("OdrzuÄ‡").onClick(event -> discard()).build(),
+														.button().text("Odrzuæ").onClick(event -> discard()).build(),
 												1d)
-										.addAndExpand(btnDelete = Components.button().text("UsuÅ„")
+										.addAndExpand(btnDelete = Components.button().text("Usuñ")
 												.withThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY)
 												.onClick(event -> {
 													delete();

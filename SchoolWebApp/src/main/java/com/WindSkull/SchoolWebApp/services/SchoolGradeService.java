@@ -10,9 +10,9 @@ public interface SchoolGradeService {
 
 	Optional<PropertyBox> getGrade(Long id);
 
-	List<PropertyBox> getGrades(Integer studentId);
-	List<PropertyBox> getGrades(Integer studentId,Integer classId);
-	List<PropertyBox> getGrades(Integer studentId,Integer classId,Integer subjectId);
+	List<PropertyBox> getGrades(Long studentId);
+	List<PropertyBox> getGrades(Long studentId,Integer classId);
+	List<PropertyBox> getGrades(Long studentId,Integer classId,Integer subjectId);
 	List<PropertyBox> getGradesClass(Integer classId);
 	List<PropertyBox> getGradesClass(Integer classId,Integer subjectId);
 	OperationResult save(PropertyBox pbOrderItem);

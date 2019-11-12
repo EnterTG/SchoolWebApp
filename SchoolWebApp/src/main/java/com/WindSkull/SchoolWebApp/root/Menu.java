@@ -72,12 +72,12 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 		VerticalLayout vl = Components.vl().width("280px").height("100%").styleName("menu")
 				.add(Components.vl().withoutPadding().add(lblArtisan,
 						btnDashboard = Components.button()
-										.text("Strona gÅ‚Ã³wna").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%").onClick(evt -> {
+										.text("Strona g³ówna").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%").onClick(evt -> {
 											Navigator.get().navigateTo("");
 											resetStyles();
 											btnDashboard.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 										}).build(), 
-						btnUsers = Components.button().text("UÅ¼ytkownicy").withThemeVariants(ButtonVariant.LUMO_LARGE)
+						btnUsers = Components.button().text("U¿ytkownicy").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
 									Navigator.get().navigateTo("users");
 									resetStyles();

@@ -11,48 +11,36 @@ create table roles (
   description varchar(500) not null
 );
 
-create table products (
+create table classes (
   id int auto_increment primary key,
   name varchar(500) not null,
-  price numeric (15,3) not null
+  semester numeric (15,3) not null,
+  classtype varchar(500) not null,
+  createyear date not null
 );
 
-create table pickup_location (
-  id integer primary key,
-  location varchar(1000) not null
-);
-
-create table customers (
+create table classstudents (
   id bigint auto_increment primary key,
-  fullname varchar(1000) not null,
-  phone_number varchar(1000),
-  details varchar(4000)
+  studentid bigint not null,
+  classid bigint not null
 );
 
-create table orders (
+create table grades (
   id bigint auto_increment primary key,
-  duedate date not null,
-  duetime time not null,
-  pickup_location integer not null,
-  paid boolean,
-  customer bigint not null,
-  state varchar(1000)
+  studentid bigint not null,
+  classid int not null,
+  subjectid int not null
+  
 );
 
-create table orderitems (
-  sequence bigint,
-  orderid bigint,
-  quantity bigint not null,
-  product int not null,
-  comment varchar(4000),
-  primary key(sequence, orderid)
+create table subjects (
+  id int auto_increment primary key,
+  name varchar(500) not null
 );
 
-create table order_history (
-	order_id bigint not null,
-	id bigint auto_increment not null,
-	message varchar(1000) not null,
-	timestamp timestamp not null, 
-	created_by bigint not null, 
-	primary key (order_id, id)
+create table teachers (
+	id bigint auto_increment primary key,
+	userid bigint not null,
+	classid int not null,
+	subjectid int not null
 );

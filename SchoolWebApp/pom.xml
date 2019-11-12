@@ -5,7 +5,7 @@
 	<groupId>com.WindSkull</groupId>
 	<artifactId>SchoolWebApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>SchoolWebApp</name>
 	<url>http://maven.apache.org</url>
@@ -33,25 +33,22 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>com.holon-platform.jpa</groupId>
-				<artifactId>holon-datastore-jpa-bom</artifactId>
-				<version>5.3.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 		</dependencies>
 		
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.holon-platform.core</groupId>
+			<artifactId>holon-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		
-		 <!-- <dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.18</version>
-		</dependency>  -->
-		
+		<!-- Holon: JDBC starter -->
+		<dependency>
+			<groupId>com.holon-platform.jdbc</groupId>
+			<artifactId>holon-starter-jdbc-datastore-hikaricp</artifactId>
+		</dependency>
 		<!-- Holon: Vaadin Flow starter -->
 		<dependency>
 			<groupId>com.holon-platform.vaadin</groupId>
@@ -78,80 +75,6 @@
 			<artifactId>vaadin-charts-flow</artifactId>
 			<version>6.3.0</version>
 		</dependency>
-		<!-- Holon: JDBC starter -->
-		<dependency>
-			<groupId>com.holon-platform.jpa</groupId>
-			<artifactId>holon-starter-jpa-hibernate</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>9.4.1212</version>
-		</dependency> 
-		
 	</dependencies>
-<!--   <build>
-    <finalName>Deploy maven project to tomcat example</finalName>
-       <plugins>
-          Below plugin will fix web.xml is missing and <failOnMissingWebXml> is set to true error.
-          <plugin>
-             <artifactId>maven-war-plugin</artifactId>
-             <version>2.3</version>
-             <configuration>
-               <failOnMissingWebXml>false</failOnMissingWebXml>
-             </configuration>
-          </plugin>
 
-          Use below plugin to deploy this maven project to tomcat server
-          <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                  <url>http://localhost:8080/manager/text</url>
-                  <path>/DeployMavenToTomcat</path>
-                  Set update to ture to avoid exist war package can not be override error
-                  <update>true</update>
-                  <username>tomcat</username>
-                  <password>tomcat</password>
-                </configuration>
-           </plugin>
-       </plugins>
-   </build> -->
-	<build>
-		<plugins>
-			<plugin>
-             <artifactId>maven-war-plugin</artifactId>
-             <version>2.3</version>
-             <configuration>
-               <failOnMissingWebXml>false</failOnMissingWebXml>
-             </configuration>
-          </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Automatic-Module-Name>com.holonplatform.jdbc.spring.boot</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                  <url>http://localhost:8080/manager/text</url>
-                  <path>/DeployMavenToTomcat</path>
-                  
-                  <update>true</update>
-                  <username>tomcat</username>
-                  <password>tomcat</password>
-                </configuration>
-           </plugin>
-		</plugins>
-	</build>
 </project>

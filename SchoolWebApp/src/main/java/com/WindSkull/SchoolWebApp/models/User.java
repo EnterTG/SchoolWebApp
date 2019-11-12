@@ -17,11 +17,11 @@ public interface User {
 	public static final NumericProperty<Long> ID = NumericProperty.create("id", Long.class);
 	public static final StringProperty EMAIL = StringProperty.create("email").message("Email")
 			.withValidator(Validator.notBlank(Localizable.builder().message("Email is required").build()));
-	public static final StringProperty NAME = StringProperty.create("name").message("Name")
+	public static final StringProperty NAME = StringProperty.create("name").message("Nazwa")
 			.withValidator(Validator.notBlank(Localizable.builder().message("User name is required").build()));
-	public static final StringProperty PASSWORD = StringProperty.create("password").message("Password")
+	public static final StringProperty PASSWORD = StringProperty.create("password").message("Has³o")
 			.withValidator(Validator.notBlank(Localizable.builder().message("Password is required").build()));
-	public static final StringProperty ROLE = StringProperty.create("role").message("Role")
+	public static final StringProperty ROLE = StringProperty.create("role").message("Rola")
 			.withValidator(Validator.notBlank(Localizable.builder().message("User role is required").build()));
 
 	public static final VirtualProperty<?> USER_ROLE = VirtualProperty.create(String.class, row -> {

@@ -27,14 +27,14 @@ public class SchoolGradeServiceImpl implements SchoolGradeService{
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId) {
+	public List<PropertyBox> getGrades(Long studentId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		return datastore.query(SchoolGrade.TARGET).filter(SchoolGrade.STUDENTID.eq(studentId)).list(SchoolGrade.GRADES);
 	
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId, Integer classId) {
+	public List<PropertyBox> getGrades(Long studentId, Integer classId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		ObjectUtils.argumentNotNull(classId, "Missing class id");
 		return datastore.query(SchoolGrade.TARGET)
@@ -45,7 +45,7 @@ public class SchoolGradeServiceImpl implements SchoolGradeService{
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId, Integer classId, Integer subjectId) {
+	public List<PropertyBox> getGrades(Long studentId, Integer classId, Integer subjectId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		ObjectUtils.argumentNotNull(classId, "Missing class id");
 		ObjectUtils.argumentNotNull(subjectId, "Missing subject id");

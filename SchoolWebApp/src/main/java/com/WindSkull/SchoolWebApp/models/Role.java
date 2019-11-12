@@ -1,11 +1,9 @@
 package com.WindSkull.SchoolWebApp.models;
 
-import com.WindSkull.SchoolWebApp.models.entities.RoleEntity;
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.core.property.StringProperty;
-import com.holonplatform.datastore.jpa.JpaTarget;
 
 public interface Role 
 {
@@ -13,5 +11,5 @@ public interface Role
 	public static final StringProperty DESCRIPTION = StringProperty.create("description");
 
 	public static final PropertySet<Property<?>> ROLE = PropertySet.builderOf(ID, DESCRIPTION).identifier(ID).build();
-	public static final DataTarget<?> TARGET = JpaTarget.of(RoleEntity.class);
+	public static final DataTarget<?> TARGET = DataTarget.named("roles");
 }
