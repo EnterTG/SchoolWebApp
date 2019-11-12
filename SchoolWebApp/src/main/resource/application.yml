@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/test"
+    username: "root"
+
+holon: 
+  datastore:
+    trace: true
+server:
+  port: 8080
