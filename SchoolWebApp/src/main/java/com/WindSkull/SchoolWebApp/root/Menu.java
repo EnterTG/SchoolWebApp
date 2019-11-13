@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.WindSkull.SchoolWebApp.enums.UserRole;
 import com.WindSkull.SchoolWebApp.pages.ClassPage;
+import com.WindSkull.SchoolWebApp.pages.StudentsPage;
 import com.WindSkull.SchoolWebApp.pages.UsersPage;
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Authentication;
@@ -99,7 +100,7 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 								}).build(),
 						btnStudents = Components.button().text("Studenci").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("students");
+									Navigator.get().navigateTo(StudentsPage.STUDENTSPAGE_ROUTE);
 									resetStyles();
 									btnStudents.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),		

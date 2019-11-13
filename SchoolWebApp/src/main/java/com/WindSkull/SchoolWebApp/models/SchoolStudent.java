@@ -12,12 +12,12 @@ public interface SchoolStudent {
 
 	
 	public static final NumericProperty<Long> ID = NumericProperty.create("id", Long.class);
-	public static final StringProperty NAME = StringProperty.create("name").message("ImiÄ™")
-			.withValidator(Validator.notBlank(Localizable.builder().message("Imie jest wymagane").build()));
+	public static final StringProperty NAME = StringProperty.create("name").message("Imiê")
+			.withValidator(Validator.notBlank(Localizable.builder().message("Imiê jest wymagane").build()));
 	public static final StringProperty SURNAME = StringProperty.create("surname").message("Nazwisko")
 			.withValidator(Validator.notNull(Localizable.builder().message("Nazwisko jest wymagane").build()));
 	public static final StringProperty BOOKID = StringProperty.create("bookid").message("Nr ksiêgi")
-			.withValidator(Validator.notNull(Localizable.builder().message("Nr ksiÄ™gi jest wymagany").build()));
+			.withValidator(Validator.notNull(Localizable.builder().message("Nr ksiêgi jest wymagany").build()));
 	
 	public static final PropertySet<Property<?>> STUDENT = PropertySet.builderOf(ID, NAME, SURNAME,BOOKID).identifier(ID)
 			.build();

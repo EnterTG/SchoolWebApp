@@ -23,7 +23,12 @@ create table classes (
   classtype varchar(500) not null,
   createyear int not null
 );
-
+create table students (
+  id bigint auto_increment primary key,
+  name varchar(500) not null,
+  surname varchar(500) not null,
+  bookid varchar(500) not null
+);
 create table classstudents (
   id bigint auto_increment primary key,
   studentid bigint not null,
