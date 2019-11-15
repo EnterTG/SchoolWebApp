@@ -5,7 +5,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.WindSkull.SchoolWebApp.components.ManageableForm;
-import com.WindSkull.SchoolWebApp.models.SchoolClass;
 import com.WindSkull.SchoolWebApp.models.SchoolStudent;
 import com.WindSkull.SchoolWebApp.root.Menu;
 import com.WindSkull.SchoolWebApp.services.SchoolStudentService;
@@ -74,7 +73,7 @@ public class StudentsPage extends VerticalLayout implements ManageableForm,Query
 				// horizontal toolbar
 				.add(Components.hl().fullWidth().spacing()
 						// search field
-						.addAndExpand(searchField.getComponent(), 1d).add(searchField.getComponent())
+						.addAndExpand(searchField.getComponent(), 1d).add(searchField.getComponent()) 
 						// btn new
 						.add(Components.button().text("Nowy").icon(VaadinIcon.PLUS)
 								.withThemeVariants(ButtonVariant.LUMO_PRIMARY).onClick(event -> {
@@ -101,8 +100,9 @@ public class StudentsPage extends VerticalLayout implements ManageableForm,Query
 									btnInsertUpdate.setText("Zaktualizuj");
 									editMode = true;
 								}).build(), 1d)
-
+						//form for input/edit data
 						.add(Components.vl().sizeUndefined().fullHeight().withoutPadding().add(form)
+								//separator
 								.addAndExpand(new Div(), 1d)
 								//3 buttons for update, discard, delete 
 								.add(Components.hl().fullWidth().spacing().addAndExpand(

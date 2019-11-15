@@ -14,7 +14,7 @@ public interface SchoolSubject {
 	public static final StringProperty NAME = StringProperty.create("name").message("Nazwa przedmiotu")
 			.withValidator(Validator.notBlank(Localizable.builder().message("Nazwa przemiotu jest wymagana").build()));
 	
-	public static final PropertySet<Property<?>> CLASS = PropertySet.builderOf(ID, NAME).identifier(ID)
+	public static final PropertySet<Property<?>> SUBJECT = PropertySet.builderOf(ID, NAME).identifier(ID)
 			.build();
 	public static final DataTarget<?> TARGET =  DataTarget.named("subjects");
 }

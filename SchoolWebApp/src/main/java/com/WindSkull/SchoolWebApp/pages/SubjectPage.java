@@ -1,17 +1,13 @@
 package com.WindSkull.SchoolWebApp.pages;
 
-import java.time.LocalDate;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.WindSkull.SchoolWebApp.components.ManageableForm;
-import com.WindSkull.SchoolWebApp.dialogs.SchoolClassStudentsEditDialog;
-import com.WindSkull.SchoolWebApp.models.SchoolClass;
-import com.WindSkull.SchoolWebApp.models.SchoolClassType;
+import com.WindSkull.SchoolWebApp.models.SchoolSubject;
 import com.WindSkull.SchoolWebApp.root.Menu;
-import com.WindSkull.SchoolWebApp.services.SchoolClassService;
+import com.WindSkull.SchoolWebApp.services.SchoolSubjectService;
 import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.property.PropertyBox;
@@ -31,13 +27,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-@Route(value = ClassPage.CLASSPAGE_ROUTE, layout = Menu.class)
-public class ClassPage extends VerticalLayout implements ManageableForm,QueryConfigurationProvider{
 
-	public static final String CLASSPAGE_ROUTE = "classes";
+@Route(value = SubjectPage.SUBJECTPAGE_ROUTE, layout = Menu.class)
+public class SubjectPage extends VerticalLayout implements ManageableForm,QueryConfigurationProvider{
+
+	public static final String SUBJECTPAGE_ROUTE = "subject";
 	
 	/**
 	 * 
@@ -46,19 +42,18 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 	@Autowired
 	private Datastore datastore;
 	@Autowired
-	private SchoolClassService classService;
+	private SchoolSubjectService subjectService;
 
 	private Input<String> searchField;
 	private PropertyListing propertyListing;
 	private PropertyInputForm form;
 	
-	private Input<Integer> semesterField;
-	private NumberField numberField;
+
 	
 	private Button btnInsertUpdate;
 	private Button btnDelete;
 	private Button btnDiscard;
-	private Button btnEditStudents;
+
 	private boolean editMode;
 	
 	
@@ -68,31 +63,9 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 		searchField = Components.input.string().placeholder("Szukaj").prefixComponent(new Icon(VaadinIcon.SEARCH))
 				.withValueChangeListener(event -> propertyListing.refresh()).valueChangeMode(ValueChangeMode.EAGER)
 				.build();
-		//Create input for semestr
-		numberField = new NumberField();
-		numberField.setValue(1d);
-		
-		numberField.setHasControls(true);
-		numberField.setMin(1);
-		numberField.setMax(7);
-		numberField.setLabel("Semestr");
-		
-		//Component for data binding
-		semesterField = Components.input.number(Integer.class).minDecimals(0).maxDecimals(7).build();
-		semesterField.setVisible(false);
-		semesterField.setValue(1);
-		
-		
-		
-		
-		//Data binding between vaadini and holo
-		numberField.addValueChangeListener(v -> semesterField.setValue(v.getValue().intValue()));
-		
-		form = Components.input.form(SchoolClass.CLASS).hidden(SchoolClass.ID)
-				.bind(SchoolClass.TYPE,
-						Components.input.singleSelect(SchoolClassType.ID).dataSource(datastore, SchoolClassType.TARGET, SchoolClassType.TYPE)
-								.sizeUndefined().itemCaptionProperty(SchoolClassType.DESCRIPTION).build())
-				.bind(SchoolClass.SEMESTER,semesterField).build();
+
+		form = Components.input.form(SchoolSubject.SUBJECT).hidden(SchoolSubject.ID).build();
+				
 		
 		form.setEnabled(false);
 
@@ -107,7 +80,6 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 									clearFields();
 									enableForm(true);
 									btnInsertUpdate.setText("Dodaj");
-									btnEditStudents.setEnabled(false);
 									// fieldEmail.focus();
 									propertyListing.deselectAll();
 									editMode = false;
@@ -117,26 +89,20 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 				.add(Components.hl().fullSize().spacing()
 						// user listing
 						.addAndExpand(
-								propertyListing = Components.listing.properties(SchoolClass.CLASS).fullSize()
-								.resizable(true).dataSource(datastore, SchoolClass.TARGET).withQueryConfigurationProvider(this)
-								.withDefaultQuerySort(SchoolClass.ID.asc())
-								.visibleColumns(SchoolClass.NAME,SchoolClass.SEMESTER,SchoolClass.CREATEYEAR,SchoolClass.TYPE)
+								propertyListing = Components.listing.properties(SchoolSubject.SUBJECT).fullSize()
+								.resizable(true).dataSource(datastore, SchoolSubject.TARGET).withQueryConfigurationProvider(this)
+								.withDefaultQuerySort(SchoolSubject.ID.asc())
+								.visibleColumns(SchoolSubject.NAME)
 								.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 								.selectionMode(SelectionMode.SINGLE).withItemClickListener(evt -> {
 									enableForm(true);
 									form.setValue(evt.getItem());
 									btnInsertUpdate.setText("Zaktualizuj");
-									btnEditStudents.setEnabled(true);
 									editMode = true;
 								}).build(), 1d)
 
 						.add(Components.vl().sizeUndefined().fullHeight().withoutPadding().add(form)
-								.add(numberField)
 								.addAndExpand(new Div(), 1d)
-								.add(Components.hl().fullWidth().spacing().addAndExpand(btnEditStudents = Components.button().text("Edytuj uczniów").onClick(e -> {
-									SchoolClassStudentsEditDialog omd = new SchoolClassStudentsEditDialog(form.getValue());
-									omd.open();
-								}).build(),1d).build())
 								//3 buttons for update, discard, delete 
 								.add(Components.hl().fullWidth().spacing().addAndExpand(
 										btnInsertUpdate = Components.button().text("Zaktualizuj")
@@ -156,7 +122,6 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 										.build())
 								.build())
 						.build());
-		btnEditStudents.setEnabled(false);
 		enableForm(false);
 	}
 
@@ -166,14 +131,13 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 		btnDelete.setEnabled(enable);
 		btnDiscard.setEnabled(enable);
 		btnInsertUpdate.setEnabled(enable);
-		numberField.setEnabled(enable);
+
 	}
 
 	@Override
 	public void clearFields() {
 		form.clear();
-		semesterField.setValue(1);
-		numberField.setValue(1d);
+
 	}
 
 	@Override
@@ -182,17 +146,14 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 		PropertyBox pbUser = form.getValue();
 
 		// check already used email
-		String className = pbUser.getValue(SchoolClass.NAME);
-		Integer classYear = pbUser.getValue(SchoolClass.CREATEYEAR);
-		Integer classSemester = pbUser.getValue(SchoolClass.SEMESTER);
-		
+		String subjectName = pbUser.getValue(SchoolSubject.NAME);
 		if (!editMode) 
 		{
-			if (classService.getClass(className, LocalDate.of(classYear, 1, 1), classSemester).size() == 0) {
+			if (!subjectService.getSubject(subjectService.getSubjectByName(subjectName)).isPresent()) {
 				saveClass(pbUser);
 				clearFields();
 			} else {
-				Notification.show("Klasa o podanych parametrach: jest juz w uzyciu", 2000, Position.BOTTOM_CENTER);
+				Notification.show("Przedmiot o podanych parametrach: jest juz w uzyciu", 2000, Position.BOTTOM_CENTER);
 			}
 		} else {
 			saveClass(pbUser);
@@ -203,7 +164,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 
 	private void saveClass(PropertyBox pbUser) {
 
-		OperationResult operationResult = classService.save(pbUser);
+		OperationResult operationResult = subjectService.save(pbUser);
 		if (operationResult.getAffectedCount() > 0) {
 			propertyListing.refresh();
 			propertyListing.select(pbUser);
@@ -213,7 +174,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 	@Override
 	public void delete() {
 		propertyListing.getFirstSelectedItem().ifPresent(propertyBox -> {
-			OperationResult op = classService.delete(propertyBox);
+			OperationResult op = subjectService.delete(propertyBox);
 			if (op.getAffectedCount() > 0) {
 				propertyListing.refresh();
 				clearFields();
@@ -234,8 +195,9 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 	public QueryFilter getQueryFilter() {
 		String searchFilter = searchField.getValue();
 		if (searchFilter != null && !searchFilter.isEmpty()) {
-			return SchoolClass.NAME.containsIgnoreCase(searchField.getValue() != null ? searchField.getValue() : "");
+			return SchoolSubject.NAME.containsIgnoreCase(searchField.getValue() != null ? searchField.getValue() : "");
 		}
 		return null;
 	}
 }
+

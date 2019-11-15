@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.WindSkull.SchoolWebApp.enums.UserRole;
 import com.WindSkull.SchoolWebApp.pages.ClassPage;
 import com.WindSkull.SchoolWebApp.pages.StudentsPage;
+import com.WindSkull.SchoolWebApp.pages.SubjectPage;
 import com.WindSkull.SchoolWebApp.pages.UsersPage;
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Authentication;
@@ -94,7 +95,7 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 								}).build(),
 						btnSubject = Components.button().text("Przedmioty").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("subjects");
+									Navigator.get().navigateTo(SubjectPage.SUBJECTPAGE_ROUTE);
 									resetStyles();
 									btnSubject.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),
