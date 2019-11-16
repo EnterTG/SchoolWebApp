@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.WindSkull.SchoolWebApp.components.ManageableForm;
 import com.WindSkull.SchoolWebApp.dialogs.SchoolClassStudentsEditDialog;
+import com.WindSkull.SchoolWebApp.dialogs.SchoolClassSubjectsEditDialog;
 import com.WindSkull.SchoolWebApp.models.SchoolClass;
 import com.WindSkull.SchoolWebApp.models.SchoolClassType;
 import com.WindSkull.SchoolWebApp.root.Menu;
@@ -59,6 +60,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 	private Button btnDelete;
 	private Button btnDiscard;
 	private Button btnEditStudents;
+	private Button btnEditSubjects;
 	private boolean editMode;
 	
 	
@@ -108,6 +110,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 									enableForm(true);
 									btnInsertUpdate.setText("Dodaj");
 									btnEditStudents.setEnabled(false);
+									btnEditSubjects.setEnabled(false);
 									// fieldEmail.focus();
 									propertyListing.deselectAll();
 									editMode = false;
@@ -127,16 +130,25 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 									form.setValue(evt.getItem());
 									btnInsertUpdate.setText("Zaktualizuj");
 									btnEditStudents.setEnabled(true);
+									btnEditSubjects.setEnabled(true);
 									editMode = true;
 								}).build(), 1d)
 
 						.add(Components.vl().sizeUndefined().fullHeight().withoutPadding().add(form)
 								.add(numberField)
 								.addAndExpand(new Div(), 1d)
-								.add(Components.hl().fullWidth().spacing().addAndExpand(btnEditStudents = Components.button().text("Edytuj uczniów").onClick(e -> {
+								.add(Components.hl().fullWidth().spacing()
+								.addAndExpand(btnEditStudents = Components.button().text("Edytuj uczniów").onClick(e -> {
 									SchoolClassStudentsEditDialog omd = new SchoolClassStudentsEditDialog(form.getValue());
 									omd.open();
-								}).build(),1d).build())
+								}).build(),1d)
+								.build())
+								.add(Components.hl().fullWidth().spacing()
+										.addAndExpand(btnEditSubjects = Components.button().text("Edytuj przedmioty").onClick(e -> {
+											SchoolClassSubjectsEditDialog omd = new SchoolClassSubjectsEditDialog(form.getValue());
+											omd.open();
+										}).build(),1d)
+										.build())
 								//3 buttons for update, discard, delete 
 								.add(Components.hl().fullWidth().spacing().addAndExpand(
 										btnInsertUpdate = Components.button().text("Zaktualizuj")
@@ -157,6 +169,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 								.build())
 						.build());
 		btnEditStudents.setEnabled(false);
+		btnEditSubjects.setEnabled(false);
 		enableForm(false);
 	}
 

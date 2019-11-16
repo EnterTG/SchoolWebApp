@@ -26,19 +26,20 @@ public class SchoolSubjectServiceImpl implements SchoolSubjectService{
 		return datastore.query(SchoolSubject.TARGET).filter(SchoolSubject.ID.eq(id)).findOne(SchoolSubject.SUBJECT);
 	}
 
-	
-	
+
 	/*
 	 * return -1 when subject not found 
 	 * 
 	 */
 	@Override
 	public Integer getSubjectByName(String subjectName) {
+		ObjectUtils.argumentNotNull(subjectName, "Missing subject name date");
 		return datastore.query(SchoolSubject.TARGET).filter(SchoolSubject.NAME.eq(subjectName)).findOne(SchoolSubject.ID).orElse(-1);
 	}
 
 	@Override
 	public List<PropertyBox> getSubjects(String subjectName) {
+		ObjectUtils.argumentNotNull(subjectName, "Missing subject date");
 		return datastore.query(SchoolSubject.TARGET).filter(SchoolSubject.NAME.contains(subjectName)).list(SchoolSubject.SUBJECT);
 	}
 

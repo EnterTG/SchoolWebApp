@@ -29,18 +29,19 @@ public class SchoolClassStudentsServiceImpl implements SchoolClassStudentsServic
 	}*/
 	@Override
 	public OperationResult save(@NotNull PropertyBox pbClassStudentsItem) {
-		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing Class PropertyBox in save");
+		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing PropertyBox in save");
 		return datastore.save(SchoolClassStudents.TARGET, pbClassStudentsItem, DefaultWriteOption.BRING_BACK_GENERATED_IDS);
 	}
 
 	@Override
 	public OperationResult delete(@NotNull PropertyBox pbClassStudentsItem) {
-		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing Class PropertyBox in delete");
+		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing PropertyBox in delete");
 		return datastore.delete(SchoolClassStudents.TARGET, pbClassStudentsItem, DefaultWriteOption.BRING_BACK_GENERATED_IDS);
 	}
 	
 	@Override
 	public List<Long> getClassStudents(Integer classId) {
+		ObjectUtils.argumentNotNull(classId, "Missing class id in delete");
 		return datastore.query(SchoolClassStudents.TARGET).filter(SchoolClassStudents.CLASSID.eq(classId))
 				.list(SchoolClassStudents.STUDENTID);
 	}

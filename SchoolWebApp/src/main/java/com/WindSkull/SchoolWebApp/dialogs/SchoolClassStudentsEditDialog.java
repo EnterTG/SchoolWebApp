@@ -38,6 +38,7 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 	private Input<Boolean> searchStudents;
 	private PropertyListing propertyListing;
 	
+	private List<Long> classStudentsList;
 	
 	public SchoolClassStudentsEditDialog(PropertyBox classPropertyBox) 
 	{
@@ -49,10 +50,10 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 		classStudentsService = Context.get().resource(SchoolClassStudentsService.class)
 				.orElseThrow(() -> new IllegalStateException("Cannot retrieve Datastore from Context."));
 		
-		
+		classStudentsList = classStudentsService.getClassStudents(classId);
 		
 		searchField = Components.input.string().placeholder("Szukaj").prefixComponent(new Icon(VaadinIcon.SEARCH))
-				.withValueChangeListener(event -> propertyListing.refresh()).valueChangeMode(ValueChangeMode.EAGER)
+				.withValueChangeListener(event -> {refreshClassStudentsList();propertyListing.refresh();}).valueChangeMode(ValueChangeMode.EAGER)
 				.build();
 
 		//List<Long> classStudents = classStudentsService.getClassStudents(classId);
@@ -65,10 +66,11 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 				.selectionMode(SelectionMode.SINGLE)
 				.withComponentColumn(
-						item -> Components.button().text(classStudentsService.getClassStudents(classId).contains(item.getValue(SchoolStudent.ID)) ? "Usuñ" : "Dodaj"  )
+						item -> Components.button().text(classStudentsList.contains(item.getValue(SchoolStudent.ID)) ? "Usuñ" : "Dodaj"  )
 						.onClick(e -> 
 						{
-							boolean isInClass = classStudentsService.getClassStudents(classId).contains(item.getValue(SchoolStudent.ID));
+							e.getSource().setEnabled(false);
+							boolean isInClass = classStudentsList.contains(item.getValue(SchoolStudent.ID));
 
 							e.getSource().setText(isInClass ? "Dodaj" :  "Usuñ" );
 							e.getSource().addThemeName(isInClass ? ButtonVariant.LUMO_SUCCESS.getVariantName() : ButtonVariant.LUMO_ERROR.getVariantName());
@@ -83,19 +85,28 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 							if(isInClass && classStudentsId.isPresent()) build.set(SchoolClassStudents.ID, classStudentsId.get());
 							PropertyBox bp = build.build();
 							if(isInClass) classStudentsService.delete(bp); else classStudentsService.save(bp);
+							e.getSource().setEnabled(true);
 						})
-						.withThemeVariants(classStudentsService.getClassStudents(classId).contains(item.getValue(SchoolStudent.ID)) ? ButtonVariant.LUMO_ERROR :ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_PRIMARY)
+						.withThemeVariants(classStudentsList.contains(item.getValue(SchoolStudent.ID)) ? ButtonVariant.LUMO_ERROR :ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_PRIMARY)
 						.build()
 						).add()
 				.build();
-		add(Components.hl().fullWidth().addAndExpand(searchField,1d).add(searchStudents = Components.input.boolean_().label("Wybrani").onClick(event -> propertyListing.refresh()).build()).build());
-		add(Components.hl().fullSize().minHeight("320px").spacing().addAndExpand(propertyListing.getComponent(),1).build());
-		add(Components.hl().fullWidth().add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build());
+		
+		add(Components.hl().fullWidth()
+				.addAndExpand(searchField,1d)
+				.add(searchStudents = Components.input.boolean_().label("Wybrani").onClick(event -> {refreshClassStudentsList();propertyListing.refresh();}).build()).build());
+		add(Components.hl().fullSize().minHeight("320px").spacing()
+				.addAndExpand(propertyListing.getComponent(),1).build());
+		add(Components.hl().fullWidth()
+				.add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build());
 		
 	}
 
 
-	
+	private void refreshClassStudentsList()
+	{
+		classStudentsList = classStudentsService.getClassStudents(classId);
+	}
 
 	@Override
 	public QueryFilter getQueryFilter() {

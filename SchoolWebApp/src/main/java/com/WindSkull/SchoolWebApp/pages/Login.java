@@ -38,7 +38,7 @@ public class Login extends HorizontalLayout {
 				.add(Components.vl().styleName("login-form").withoutPadding().width("30%")
 						.add(Components.vl().styleName("login-logo-background").spacing()
 								.add(Components.h1().text("Holon Bakery Demo").build())
-								.add(Components.label().sizeUndefined().text("admin@holon-platform.com + admin")
+								.add(Components.label().sizeUndefined().text("admin + admin")
 										.build())
 								.add(Components.label().sizeUndefined().text("barista@holon-platform.com + barista")
 										.build())
