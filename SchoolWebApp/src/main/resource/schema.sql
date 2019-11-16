@@ -32,7 +32,7 @@ create table students (
 create table classstudents (
   id bigint auto_increment primary key,
   studentid bigint not null,
-  classid bigint not null
+  classid int not null
 );
 
 create table grades (

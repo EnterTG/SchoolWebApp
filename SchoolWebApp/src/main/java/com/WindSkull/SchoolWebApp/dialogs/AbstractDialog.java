@@ -15,7 +15,7 @@ public abstract class AbstractDialog extends Dialog implements HasTheme {
 	public AbstractDialog() {
 		// default size
 		//this.setSizeFull();
-		setWidth("700px");
+		setWidth("900px");
 		//setMinWidth("700px");
 		// custome css style
 		getThemeNames().add("orders");

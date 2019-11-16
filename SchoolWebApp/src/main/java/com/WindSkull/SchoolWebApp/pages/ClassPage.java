@@ -70,7 +70,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 				.build();
 		//Create input for semestr
 		numberField = new NumberField();
-		numberField.setValue(1d);
+		numberField.setValue((double)1);
 		
 		numberField.setHasControls(true);
 		numberField.setMin(1);
@@ -173,7 +173,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 	public void clearFields() {
 		form.clear();
 		semesterField.setValue(1);
-		numberField.setValue(1d);
+		numberField.setValue((double)1);
 	}
 
 	@Override

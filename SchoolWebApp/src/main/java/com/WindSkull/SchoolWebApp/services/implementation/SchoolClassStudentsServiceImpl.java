@@ -1,6 +1,7 @@
 package com.WindSkull.SchoolWebApp.services.implementation;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,11 +22,11 @@ public class SchoolClassStudentsServiceImpl implements SchoolClassStudentsServic
 	@Autowired
 	private Datastore datastore;
 
-	@Override
+	/*@Override
 	public List<PropertyBox> getClassStudents(Integer classId) {
 		return datastore.query(SchoolClassStudents.TARGET).filter(SchoolClassStudents.CLASSID.eq(classId))
 				.list(SchoolClassStudents.CLASSSTUDENTS);
-	}
+	}*/
 	@Override
 	public OperationResult save(@NotNull PropertyBox pbClassStudentsItem) {
 		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing Class PropertyBox in save");
@@ -36,5 +37,19 @@ public class SchoolClassStudentsServiceImpl implements SchoolClassStudentsServic
 	public OperationResult delete(@NotNull PropertyBox pbClassStudentsItem) {
 		ObjectUtils.argumentNotNull(pbClassStudentsItem, "Missing Class PropertyBox in delete");
 		return datastore.delete(SchoolClassStudents.TARGET, pbClassStudentsItem, DefaultWriteOption.BRING_BACK_GENERATED_IDS);
+	}
+	
+	@Override
+	public List<Long> getClassStudents(Integer classId) {
+		return datastore.query(SchoolClassStudents.TARGET).filter(SchoolClassStudents.CLASSID.eq(classId))
+				.list(SchoolClassStudents.STUDENTID);
+	}
+
+	@Override
+	public Optional<Long> getClassStudentsId(Integer classId, Long studentId) {
+		return datastore.query(SchoolClassStudents.TARGET)
+				.filter(SchoolClassStudents.CLASSID.eq(classId).and( SchoolClassStudents.STUDENTID.eq(studentId)))
+				.findOne(SchoolClassStudents.ID);
+
 	}
 }
