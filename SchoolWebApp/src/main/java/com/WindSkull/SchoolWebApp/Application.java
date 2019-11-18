@@ -42,6 +42,7 @@ public class Application
 	// Account provider
 	@Bean
 	public AccountProvider accountProvider(Datastore datastore) {
+
 		return userId -> datastore.query().target(User.TARGET).filter(User.EMAIL.eq(userId)).findOne(User.USER)
 				// map the user PropertyBox to an Account
 				.map(user -> Account.builder(userId)

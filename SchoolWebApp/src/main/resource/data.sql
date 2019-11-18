@@ -1,6 +1,6 @@
 -- users
 insert into users (id, email, name, password, role) VALUES (1, 'admin', 'Steve', 'x61Ey612Kl2gpFL56FT9weDnpSo4AV8j8+qx2AuTHdRyY036xxzTTrw10Wq3+4qQyB+XURPWx1ONxp3Y3pB37A==', 'admin');
-insert into users (id, email, name, password, role) VALUES (2, 'baker', 'Teacher', 'rqOqT04K8MaDM8l29pAqQr1LeP66H4BvNdsx+NVQsOvg3LX+MAcQl92n3MADWI2i0YhMIMQqeKK3bM8WIkWdnA==', 'teacher');
+insert into users (id, email, name, password, role) VALUES (2, 'baker', 'Teacher', 'x61Ey612Kl2gpFL56FT9weDnpSo4AV8j8+qx2AuTHdRyY036xxzTTrw10Wq3+4qQyB+XURPWx1ONxp3Y3pB37A==', 'teacher');
 
 -- roles
 insert into roles (id, description) VALUES ('admin', 'Administrator');

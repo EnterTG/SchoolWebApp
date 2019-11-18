@@ -2,8 +2,10 @@ package com.WindSkull.SchoolWebApp.pages;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.WindSkull.SchoolWebApp.models.User;
 import com.WindSkull.SchoolWebApp.root.MainLayout;
 import com.holonplatform.auth.AuthContext;
+import com.holonplatform.auth.Authentication;
 import com.holonplatform.auth.AuthenticationToken;
 import com.holonplatform.auth.exceptions.AuthenticationException;
 import com.holonplatform.core.Validator;
@@ -30,6 +32,8 @@ public class Login extends HorizontalLayout {
 	private ValidatableInput<String> usn;
 	private ValidatableInput<String> pwd;
 
+	
+	
 	public Login() {
 		super();
 		Components
@@ -52,13 +56,14 @@ public class Login extends HorizontalLayout {
 												.styleName("userfield").blankValuesAsNull(true).fullWidth().build())
 												.validateOnValueChange(
 														false)
+												
 												.withValidator(Validator.notBlank()).build())
 								.add(pwd = ValidatableInput
 										.builder(Components.input.secretString().label("Password").required()
 												.prefixComponent(new Icon(VaadinIcon.LOCK)).styleName("passwordfield")
 												.blankValuesAsNull(true).fullWidth().build())
 										.validateOnValueChange(false).withValidator(Validator.notBlank()).build())
-								.addAndAlign(Components.button().text("Sign in").fullWidth()
+								.addAndAlign(Components.button().text("Zaloguj").fullWidth()
 										.withThemeVariants(ButtonVariant.LUMO_PRIMARY).onClick(e -> login()).build(),
 										Alignment.BASELINE)
 								.justifyContentMode(JustifyContentMode.CENTER).build())
@@ -82,10 +87,13 @@ public class Login extends HorizontalLayout {
 			try {
 				// authenticate
 				authContext.authenticate(AuthenticationToken.accountCredentials(usn.getValue(), pwd.getValue()));
+				
 				// redirect to previous request view or to default view if none
 				Navigator.get().navigateToDefault();
+				
+			
 			} catch (AuthenticationException ae) {
-				Notification.show("Invalid credentials", 3000, Position.MIDDLE);
+				Notification.show("Dane nieprawid³owe", 3000, Position.MIDDLE);
 			}
 		}
 	}

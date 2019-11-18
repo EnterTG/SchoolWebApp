@@ -1,45 +1,25 @@
 package com.WindSkull.SchoolWebApp;
 
 
-import static com.WindSkull.SchoolWebApp.enums.ClassType.DAY;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.CLASS;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.CREATEYEAR;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.ID;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.NAME;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.SEMESTER;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.TARGET;
-import static com.WindSkull.SchoolWebApp.models.SchoolClass.TYPE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.time.LocalDate;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import com.holonplatform.core.datastore.Datastore;
-import com.holonplatform.core.datastore.Datastore.OperationResult;
-import com.holonplatform.core.datastore.DefaultWriteOption;
-import com.holonplatform.core.property.PropertyBox;
 
 @SpringBootTest
 public class TestDatastore {
 
-	@Autowired
-	private Datastore datastore;
-
+	/*
+	 * @Autowired private Datastore datastore;
+	 */
 	
-	@Test
+	//@Test
 	public void testDatastore() {
-		assertNotNull(datastore);
-		testSave();
+		/*assertNotNull(datastore);
+		testSave();*/
 	}
 	
 	
 	public void testSave()
 	{
-		PropertyBox schoolclass = PropertyBox.builder(CLASS)
+		/*PropertyBox schoolclass = PropertyBox.builder(CLASS)
 				.set(NAME, "Test")
 				.set(SEMESTER, 1)
 				.set(TYPE, DAY.name())
@@ -58,6 +38,6 @@ public class TestDatastore {
 		
 		datastore.save(TARGET, schoolclass,DefaultWriteOption.BRING_BACK_GENERATED_IDS);
 		Integer productId2 = schoolclass2.getValue(ID); 
-		assertEquals(Integer.valueOf(2), productId2);
+		assertEquals(Integer.valueOf(2), productId2);*/
 	}
 }

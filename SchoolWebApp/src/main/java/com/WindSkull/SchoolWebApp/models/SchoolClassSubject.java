@@ -13,7 +13,7 @@ public interface SchoolClassSubject {
 	
 	public static final String SUBJECT_MESSAGE = "Przedmiot";
 	public static final String TEACHER_MESSAGE = "Nauczyciel";
-
+	public static final String CLASS_MESSAGE = "Klasa";
 	
 	public static final NumericProperty<Long> ID = NumericProperty.create("id", Long.class);	
 	public static final NumericProperty<Integer> SUBJECTID = NumericProperty.create("subjectid", Integer.class)
@@ -37,8 +37,19 @@ public interface SchoolClassSubject {
 			return ds.query(User.TARGET).filter(User.ID.eq(propertyBox.getValue(TEACHERID)))
 					.findOne(User.NAME).orElse("NAME error");
 	}).message(TEACHER_MESSAGE);
+	
+
+	public static final VirtualProperty<String> CLASS_NAME = VirtualProperty.create(String.class, propertyBox -> {
+			Datastore ds = Context.get().resource(Datastore.class)
+					.orElseThrow(() -> new IllegalStateException("Cannot retrieve Datastore from Context."));
+			return ds.query(SchoolClass.TARGET).filter(SchoolClass.ID.eq(propertyBox.getValue(CLASSID)))
+					.findOne(SchoolClass.NAME).orElse("NAME error");
+	}).message(CLASS_MESSAGE);
+	
+	
+	
 	public static final PropertySet<?> CLASSSUBJECT = PropertySet
-			.builderOf(ID, SUBJECTID, CLASSID,TEACHERID,SUBJECT_NAME,TEACHER_NAME).identifier(ID).build();
+			.builderOf(ID, SUBJECTID, CLASSID,TEACHERID,SUBJECT_NAME,TEACHER_NAME,CLASS_NAME).identifier(ID).build();
 
 	
 	
