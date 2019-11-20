@@ -23,3 +23,7 @@ insert into classes (id, name,semester,classtype,createyear) VALUES (1, 'Class1'
 insert into classstudents (id, studentid,classid) VALUES (1,1,1);
 insert into classstudents (id, studentid,classid) VALUES (2,2,1);
 insert into classstudents (id, studentid,classid) VALUES (3,5,1);
+
+insert into subjects (id, name) VALUES (1,'Test subject');
+
+insert into classsubjects (id, subjectid,classid,teacherid) VALUES (1,1,1,2);

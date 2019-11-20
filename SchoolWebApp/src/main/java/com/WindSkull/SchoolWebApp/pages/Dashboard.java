@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.WindSkull.SchoolWebApp.dialogs.SchoolGradesDialog;
 import com.WindSkull.SchoolWebApp.enums.UserRole;
 import com.WindSkull.SchoolWebApp.models.SchoolClassSubject;
 import com.WindSkull.SchoolWebApp.models.User;
@@ -74,24 +75,30 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 				.selectionMode(SelectionMode.NONE)
 				.withComponentColumn(
-						item -> Components.button().text("Oceny")
-						.onClick(e -> 
+						item -> 
 						{
-							
-						})
-						.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
-						.build()
-						).add()
-				.withComponentColumn(
-						item -> Components.button().text("Obecnoœci")
-						.onClick(e -> 
-						{
-							
-						})
-						.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
-						.build()
-						).add()
+							return Components.hl()
+									.addAndExpand(
+											Components.button().text("Oceny")
+											.onClick(e -> 
+											{
+												SchoolGradesDialog sgd = new SchoolGradesDialog(item.getValue(SchoolClassSubject.CLASSID), item.getValue(SchoolClassSubject.SUBJECTID));sgd.open();
+											})
+											.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
+											.build(), 1)
+									.addAndExpand(
+											Components.button().text("Obecnoœci")
+											.onClick(e -> 
+											{
+												
+											})
+											.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
+											.build(), 1)
+							.build();
+						}
+				).add()
 				.fullSize();
+		
 		if(!authContext.isPermitted(UserRole.ADMIN.getRole()))
 			listingBuilder.hidden(SchoolClassSubject.TEACHER_NAME);
 		

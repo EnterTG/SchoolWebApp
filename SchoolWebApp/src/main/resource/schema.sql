@@ -47,8 +47,8 @@ create table grades (
   id bigint auto_increment primary key,
   studentid bigint not null,
   classid int not null,
-  subjectid int not null
-  
+  subjectid int not null,
+  grade varchar(500)
 );
 
 create table subjects (

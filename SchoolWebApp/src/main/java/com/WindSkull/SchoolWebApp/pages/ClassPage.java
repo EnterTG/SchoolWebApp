@@ -203,7 +203,7 @@ public class ClassPage extends VerticalLayout implements ManageableForm,QueryCon
 		{
 			if (classService.getClass(className, LocalDate.of(classYear, 1, 1), classSemester).size() == 0) {
 				saveClass(pbUser);
-				clearFields();
+				//clearFields();
 			} else {
 				Notification.show("Klasa o podanych parametrach: jest juz w uzyciu", 2000, Position.BOTTOM_CENTER);
 			}
