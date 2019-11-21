@@ -47,10 +47,20 @@ public class SchoolClassStudentsServiceImpl implements SchoolClassStudentsServic
 	}
 
 	@Override
+	public List<PropertyBox> getClassStudentsBox(Integer classId) {
+		ObjectUtils.argumentNotNull(classId, "Missing class id in delete");
+		return datastore.query(SchoolClassStudents.TARGET).filter(SchoolClassStudents.CLASSID.eq(classId))
+				.list(SchoolClassStudents.CLASSSTUDENTS);
+	}
+	
+	
+	@Override
 	public Optional<Long> getClassStudentsId(Integer classId, Long studentId) {
 		return datastore.query(SchoolClassStudents.TARGET)
 				.filter(SchoolClassStudents.CLASSID.eq(classId).and( SchoolClassStudents.STUDENTID.eq(studentId)))
 				.findOne(SchoolClassStudents.ID);
 
 	}
+
+	
 }

@@ -110,7 +110,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		Input<String> gradeInput = Components.input.string().withValue("1").width("80px").maxWidth("80px")
 		//.preventInvalidInput().pattern("|1[0-5]?|[2-9]")
 		.withThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER)
-		.prefixComponent(
+		/*.prefixComponent(
 				Components.button().icon(VaadinIcon.MINUS)
 				.withThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY).maxWidth("20px")
 				.onClick(evt -> 
@@ -120,7 +120,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 					}
 				)
 				.build()
-		)
+		)*/
 		.build();
 		
 		

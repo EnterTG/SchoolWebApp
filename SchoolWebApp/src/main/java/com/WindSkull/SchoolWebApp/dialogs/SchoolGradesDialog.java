@@ -49,7 +49,7 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 				.withQueryConfigurationProvider(this)
 				.withDefaultQuerySort(SchoolClassStudents.ID.asc())
 				.selectionMode(SelectionMode.NONE)
-				
+				.sizeUndefined()
 				.withItemClickListener(evt -> 
 				{
 					

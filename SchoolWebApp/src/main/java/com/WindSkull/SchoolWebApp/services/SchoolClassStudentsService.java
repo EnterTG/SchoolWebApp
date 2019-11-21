@@ -8,7 +8,7 @@ import com.holonplatform.core.property.PropertyBox;
 
 public interface SchoolClassStudentsService {
 
-	//List<PropertyBox> getClassStudents(Integer id);
+	List<PropertyBox> getClassStudentsBox(Integer classId);
 	List<Long> getClassStudents(Integer classid);
 	
 	Optional<Long> getClassStudentsId(Integer classId,Long studentId);
