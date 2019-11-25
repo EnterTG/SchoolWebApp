@@ -13,12 +13,8 @@ import com.holonplatform.vaadin.flow.components.Input;
 import com.holonplatform.vaadin.flow.components.PropertyInputForm;
 import com.holonplatform.vaadin.flow.components.builders.HorizontalLayoutBuilder;
 import com.holonplatform.vaadin.flow.components.builders.PropertyInputFormBuilder;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -51,7 +47,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	public HorizontalLayout createComponent(PropertyBox item) 
 	{
 		schoolGradeService = Context.get().resource(SchoolGradeService.class)
-				.orElseThrow(() -> new IllegalStateException("Cannot retrieve Datastore from Context."));
+				.orElseThrow(() -> new IllegalStateException("Cannot retrieve SchoolGradeService from Context."));
 		
 		studentId = item.getValue(SchoolClassStudents.STUDENTID);
 		
@@ -107,7 +103,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		grade.setValue(SchoolGrade.GRADE, grade.getValue(SchoolGrade.GRADE));
 
 		
-		Input<String> gradeInput = Components.input.string().withValue("1").width("80px").maxWidth("80px")
+		Input<String> gradeInput = Components.input.string().withValue("1").width("40px").maxWidth("40px")
 		//.preventInvalidInput().pattern("|1[0-5]?|[2-9]")
 		.withThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER)
 		/*.prefixComponent(

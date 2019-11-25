@@ -45,7 +45,11 @@
 			<artifactId>holon-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>grid-renderers-collection-addon</artifactId>
+			<version>2.6.1</version>
+		</dependency>
 		<!-- Holon: JDBC starter -->
 		<dependency>
 			<groupId>com.holon-platform.jdbc</groupId>

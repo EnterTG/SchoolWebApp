@@ -1,44 +1,168 @@
 package com.WindSkull.SchoolWebApp.forms;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.WindSkull.SchoolWebApp.models.SchoolClassStudents;
+import com.WindSkull.SchoolWebApp.models.SchoolPresence;
+import com.WindSkull.SchoolWebApp.models.SchoolPresenceStudents;
+import com.WindSkull.SchoolWebApp.models.SchoolStudent;
+import com.WindSkull.SchoolWebApp.renderers.StudentPresenceRenderer;
 import com.WindSkull.SchoolWebApp.services.SchoolClassStudentsService;
+import com.WindSkull.SchoolWebApp.services.SchoolPresenceService;
+import com.WindSkull.SchoolWebApp.services.SchoolPresenceStudentsService;
+import com.WindSkull.SchoolWebApp.services.SchoolStudentService;
+import com.holonplatform.core.Context;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.flow.components.Components;
-import com.holonplatform.vaadin.flow.components.builders.VerticalLayoutBuilder;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 public class PresenceForm extends HorizontalLayout{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	SchoolClassStudentsService classStudentsService;
+	
+	SchoolPresenceService presenceService;
+	
+	SchoolPresenceStudentsService presenceStudentsService;
+	
+	SchoolStudentService schoolStudentService;
 	
 	private Integer classId;
 	private Integer subjectId;
 	
-	public PresenceForm() 
-	{
-		VerticalLayout vt = getStudentsList();
-	}
+	List<PropertyBox> students;
+	private Grid<StudentPresence> presenceTable;
+	
+	
 
 	
-	
-	private VerticalLayout getStudentsList()
+	public PresenceForm( Integer classId,Integer subjectId) 
 	{
-		List<PropertyBox> students = classStudentsService.getClassStudentsBox(classId);
+		this.classId = classId;
+		this.subjectId = subjectId;
 		
-		VerticalLayoutBuilder vlb = Components.vl();
+		classStudentsService = Context.get().resource(SchoolClassStudentsService.class)
+				.orElseThrow(() -> new IllegalStateException("Cannot retrieve classStudentsService from Context."));
 		
-		students.stream().forEach(pb -> vlb.add(Components.paragraph().text(getStudentName(pb)).build()));
+		presenceService = Context.get().resource(	SchoolPresenceService.class)
+				.orElseThrow(() -> new IllegalStateException("Cannot retrieve SchoolPresenceService from Context."));
 		
-		return vlb.build();
+		presenceStudentsService = Context.get().resource(	SchoolPresenceStudentsService.class)
+				.orElseThrow(() -> new IllegalStateException("Cannot retrieve SchoolPresenceStudentsService from Context."));
+		
+		schoolStudentService = Context.get().resource(	SchoolStudentService.class)
+				.orElseThrow(() -> new IllegalStateException("Cannot retrieve SchoolStudentService from Context."));
+		
+	
+		
+		students = classStudentsService.getClassStudentsBox(classId);
+		//Id of presence base of class id and subject id
+		List<Long> presencesIds = presenceService.getPresencesIds(classId, subjectId);
+		
+		//
+		List<StudentPresence> studentsPresenceClassList = students.stream().map(sb -> getStudentPresenceClass(presencesIds,sb.getValue(SchoolClassStudents.STUDENTID))).collect(Collectors.toList());
+		
+		presenceTable = new Grid<>();
+		presenceTable.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_ROW_STRIPES);
+		presenceTable.setSizeUndefined();
+		presenceTable.setItems(studentsPresenceClassList);
+		
+		presenceTable.addColumn(StudentPresence::getName).setResizable(true).setWidth("250px").setHeader("Student");
+		presencesIds.forEach(pid -> presenceTable.addColumn(new StudentPresenceRenderer(pid)).setHeader(presenceService.getPresence(pid).get().getValue(SchoolPresence.DATE).toLocalDate().toString()));
+		
+		add(Components.hl().fullSize().addAndExpand(presenceTable,1).build());
+	}
+
+	private StudentPresence getStudentPresenceClass(List<Long> presencesIds,Long studnetId)
+	{
+		StudentPresence sp = new StudentPresence();
+		Optional<PropertyBox> spb = schoolStudentService.getStudent(studnetId);
+		if(spb.isPresent())
+		{
+			sp.studnetName = spb.get().getValue(SchoolStudent.NAME);
+			sp.studentSurname = spb.get().getValue(SchoolStudent.SURNAME);
+			sp.studnetID = studnetId;
+		}
+		List<PropertyBox> studentPresence = presenceStudentsService.getStudnentsPresence(presencesIds, studnetId);
+		studentPresence.forEach(pb -> sp.presences.put(pb.getValue(SchoolPresenceStudents.PRESENCEID), pb.getValue(SchoolPresenceStudents.PRESENCE)));
+		return sp;
+	}
+
+	//Create new presence for each student form classstudent
+	public void addPresenceCheck(Date dt)
+	{
+		PropertyBox classSubjectPresence = PropertyBox.create(SchoolPresence.PRESENCES);
+		LocalDateTime ldt;
+		classSubjectPresence.setValue(SchoolPresence.CLASSID, classId);
+		classSubjectPresence.setValue(SchoolPresence.SUBJECTID, subjectId);
+		classSubjectPresence.setValue(SchoolPresence.DATE, ldt = convertToLocalDateTimeViaInstant(dt));
+		
+		Long newPresenceId = (Long) presenceService.save(classSubjectPresence).getFirstInsertedKey().get();
+		
+		addNewPresenceCheckToStudents(newPresenceId);
+		/*students = classStudentsService.getClassStudentsBox(classId);
+		
+		List<Long> presencesIds = presenceService.getPresencesIds(classId, subjectId);
+		
+		presenceTable.setItems(students.stream().map(sb -> getStudentPresenceClass(presencesIds,sb.getValue(SchoolClassStudents.STUDENTID))).collect(Collectors.toList()));
+		presenceTable.addColumn(new StudentPresenceRenderer(newPresenceId)).setHeader(ldt.toLocalDate().toString());
+		*/
+		
 	}
 	
-	
-	private String getStudentName(PropertyBox studentPropertyBox)
+	private void addNewPresenceCheckToStudents(Long presenceID)
 	{
-		return (studentPropertyBox.getValue(SchoolClassStudents.STUDENT_NAME) + " "  + studentPropertyBox.getValue( SchoolClassStudents.STUDENT_SURNAME));
+		students.stream().forEach(e -> 
+		{
+			PropertyBox studentPresence = PropertyBox.create(SchoolPresenceStudents.PRESENCES);
+			studentPresence.setValue(SchoolPresenceStudents.PRESENCEID, presenceID);
+			studentPresence.setValue(SchoolPresenceStudents.STUDENTID, e.getValue(SchoolClassStudents.STUDENTID));
+			
+			presenceStudentsService.save(studentPresence);
+		});
 	}
+	
+	public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) 
+	{
+		return dateToConvert.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDateTime();
+	}
+	
+	public class StudentPresence
+	{
+		public String studnetName,studentSurname;
+	
+		public Long studnetID;
+		
+		//presence id , is presence
+		public HashMap<Long,Boolean> presences = new HashMap<>();
+		
+		public String getName()
+		{
+			return studnetName + " " + studentSurname;
+		}
+		
+		public PropertyBox getPresenceStudentsBox(Long presenceID)
+		{
+			PropertyBox pb = PropertyBox.create(SchoolPresenceStudents.PRESENCES);
+			pb.setValue(SchoolPresenceStudents.PRESENCEID, presenceID);
+			pb.setValue(SchoolPresenceStudents.PRESENCE, presences.getOrDefault(presenceID, false));
+			pb.setValue(SchoolPresenceStudents.STUDENTID, studnetID);
+			return pb;
+		}
+	}
+	
 }

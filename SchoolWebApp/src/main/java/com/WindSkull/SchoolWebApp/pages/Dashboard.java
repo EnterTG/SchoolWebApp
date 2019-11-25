@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.WindSkull.SchoolWebApp.dialogs.SchoolGradesDialog;
+import com.WindSkull.SchoolWebApp.dialogs.SchoolPresenceEditDialog;
 import com.WindSkull.SchoolWebApp.enums.UserRole;
 import com.WindSkull.SchoolWebApp.models.SchoolClassSubject;
 import com.WindSkull.SchoolWebApp.models.User;
@@ -90,7 +91,8 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 											Components.button().text("Obecnoœci")
 											.onClick(e -> 
 											{
-												
+												SchoolPresenceEditDialog ped = new SchoolPresenceEditDialog(item.getValue(SchoolClassSubject.CLASSID), item.getValue(SchoolClassSubject.SUBJECTID));
+												ped.open();
 											})
 											.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
 											.build(), 1)

@@ -62,3 +62,16 @@ create table teachers (
 	classid int not null,
 	subjectid int not null
 );
+
+create table presencestudents (
+	studentid bigint ,
+	presenceid bigint ,
+	presence boolean DEFAULT FALSE
+);
+
+create table presence (
+	id bigint auto_increment primary key,
+	classid int not null,
+	subjectid int not null,
+	date timestamp not null 
+);
