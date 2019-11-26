@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.WindSkull.SchoolWebApp.enums.UserRole;
-import com.WindSkull.SchoolWebApp.models.User;
 import com.WindSkull.SchoolWebApp.pages.ClassPage;
 import com.WindSkull.SchoolWebApp.pages.StudentsPage;
 import com.WindSkull.SchoolWebApp.pages.SubjectPage;
@@ -23,8 +22,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.ParentLayout;

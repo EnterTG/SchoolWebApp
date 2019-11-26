@@ -1,6 +1,5 @@
 package com.WindSkull.SchoolWebApp.dialogs;
 
-import com.holonplatform.vaadin.flow.components.Components;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasTheme;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -14,8 +13,6 @@ public abstract class AbstractDialog extends Dialog implements HasTheme {
 
 	public AbstractDialog() {
 		// default size
-		//this.setSizeFull();
-		
 		setHeight("calc(90vh - (2*var(--lumo-space-m)))");
 		setWidth("calc(90vw - (4*var(--lumo-space-m)))");
 		//setWidth("1100px");

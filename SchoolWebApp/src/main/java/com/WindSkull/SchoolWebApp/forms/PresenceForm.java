@@ -104,21 +104,13 @@ public class PresenceForm extends HorizontalLayout{
 	public void addPresenceCheck(Date dt)
 	{
 		PropertyBox classSubjectPresence = PropertyBox.create(SchoolPresence.PRESENCES);
-		LocalDateTime ldt;
 		classSubjectPresence.setValue(SchoolPresence.CLASSID, classId);
 		classSubjectPresence.setValue(SchoolPresence.SUBJECTID, subjectId);
-		classSubjectPresence.setValue(SchoolPresence.DATE, ldt = convertToLocalDateTimeViaInstant(dt));
+		classSubjectPresence.setValue(SchoolPresence.DATE, convertToLocalDateTimeViaInstant(dt));
 		
 		Long newPresenceId = (Long) presenceService.save(classSubjectPresence).getFirstInsertedKey().get();
 		
 		addNewPresenceCheckToStudents(newPresenceId);
-		/*students = classStudentsService.getClassStudentsBox(classId);
-		
-		List<Long> presencesIds = presenceService.getPresencesIds(classId, subjectId);
-		
-		presenceTable.setItems(students.stream().map(sb -> getStudentPresenceClass(presencesIds,sb.getValue(SchoolClassStudents.STUDENTID))).collect(Collectors.toList()));
-		presenceTable.addColumn(new StudentPresenceRenderer(newPresenceId)).setHeader(ldt.toLocalDate().toString());
-		*/
 		
 	}
 	

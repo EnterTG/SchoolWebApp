@@ -2,10 +2,8 @@ package com.WindSkull.SchoolWebApp.pages;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.WindSkull.SchoolWebApp.models.User;
 import com.WindSkull.SchoolWebApp.root.MainLayout;
 import com.holonplatform.auth.AuthContext;
-import com.holonplatform.auth.Authentication;
 import com.holonplatform.auth.AuthenticationToken;
 import com.holonplatform.auth.exceptions.AuthenticationException;
 import com.holonplatform.core.Validator;

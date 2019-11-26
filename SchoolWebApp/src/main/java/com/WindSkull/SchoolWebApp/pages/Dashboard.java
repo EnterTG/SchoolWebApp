@@ -44,6 +44,7 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 	@Autowired
 	private AuthContext authContext;
 	
+	@SuppressWarnings("unused")
 	private Input<String> searchField;
 	
 	private PropertyListing propertyListing;
@@ -107,24 +108,6 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 		propertyListing = listingBuilder.build();
 		add(Components.hl().fullSize().add(propertyListing).build());
 		
-		/*StorefrontListing storefrontListing = new StorefrontListing();
-		storefrontListing.setFilterSupplier(() -> buildFilter());
-
-
-		Components.configure(this).fullWidth().spacing().withoutMargin()
-				// horizontal toolbar
-				.add(Components.hl().fullWidth().spacing()
-						// search field
-						.addAndExpand(searchField.getComponent(), 1d)
-						// btn new
-						.add(Components.button().text("New order").styleName("storefront-btn").icon(VaadinIcon.PLUS)
-								.withThemeVariants(ButtonVariant.LUMO_PRIMARY).onClick(event -> {
-									OrderManageDialog omd = new OrderManageDialog(null,
-											storefrontListing.getPropertyListing());
-									omd.open();
-								}).build())
-						.build())
-				.add(storefrontListing).flexGrow(1, storefrontListing);*/
 	}
 
 	
