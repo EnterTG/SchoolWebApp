@@ -55,10 +55,8 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 		searchField = Components.input.string().placeholder("Szukaj").prefixComponent(new Icon(VaadinIcon.SEARCH))
 				.withValueChangeListener(event -> {refreshClassStudentsList();propertyListing.refresh();}).valueChangeMode(ValueChangeMode.EAGER)
 				.build();
-
-		//List<Long> classStudents = classStudentsService.getClassStudents(classId);
 		
-		propertyListing = PropertyListing.builder(SchoolStudent.STUDENT)
+		propertyListing = PropertyListing.builder(SchoolStudent.STUDENT).fullSize()
 				.editorBuffered(true) 
 				.dataSource(datastore, SchoolStudent.TARGET).withQueryConfigurationProvider(this)
 				.withDefaultQuerySort(SchoolStudent.ID.asc())
@@ -92,13 +90,17 @@ public class SchoolClassStudentsEditDialog extends AbstractDialog implements Que
 						).add()
 				.build();
 		
-		add(Components.hl().fullWidth()
-				.addAndExpand(searchField,1d)
-				.add(searchStudents = Components.input.boolean_().label("Wybrani").onClick(event -> {refreshClassStudentsList();propertyListing.refresh();}).build()).build());
-		add(Components.hl().fullSize().minHeight("320px").spacing()
-				.addAndExpand(propertyListing.getComponent(),1).build());
-		add(Components.hl().fullWidth()
-				.add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build());
+		
+		add(Components.vl().fullSize()
+				.add(Components.hl().fullWidth()
+						.addAndExpand(searchField,1d)
+						.add(searchStudents = Components.input.boolean_().label("Wybrani").onClick(event -> {refreshClassStudentsList();propertyListing.refresh();}).build()).build())
+				.addAndExpand(Components.hl().fullSize().minHeight("320px").spacing()
+						.addAndExpand(propertyListing,1).build(), 1)
+				.add(Components.hl().fullWidth()
+						.add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build())
+				.build()
+			);
 		
 	}
 

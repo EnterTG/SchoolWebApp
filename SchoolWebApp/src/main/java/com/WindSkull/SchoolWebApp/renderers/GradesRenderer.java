@@ -59,8 +59,8 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		propertList.forEach(p -> {grades.add(Components.div().width("5px").build());grades.add(p);});
 		HorizontalLayout ghl = grades.build();
 		
-		HorizontalLayout hl = Components.hl().fullWidth()
-				.add(Components.label().text( item.getValue(SchoolClassStudents.STUDENT_NAME ) + " " + item.getValue(SchoolClassStudents.STUDENT_SURNAME) ).build() )
+		HorizontalLayout hl = Components.hl().sizeUndefined()
+				//.add(Components.label().text( item.getValue(SchoolClassStudents.STUDENT_NAME ) + " " + item.getValue(SchoolClassStudents.STUDENT_SURNAME) ).build() )
 				.addAndExpand(ghl , 1)
 				.add(Components.button()
 						.icon(VaadinIcon.PLUS)

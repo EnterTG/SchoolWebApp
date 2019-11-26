@@ -32,15 +32,12 @@ public class SchoolPresenceEditDialog extends AbstractDialog implements QueryCon
 	public SchoolPresenceEditDialog(Integer classID,Integer subjectId)
 	{
 		this.classID = classID;
-		//this.subjectID = subjectId;
-		
-		
-		//Notification.show("ClassId: " + classID + " subjectId: " + subjectId, 10000, Position.BOTTOM_CENTER);
 		
 		listing = new PresenceForm(classID,subjectId);
 		
-		add(Components.hl()
-				.fullWidth()
+		listing.setSizeFull();
+		add(Components.vl().fullSize()
+			.add(Components.hl().fullWidth()
 				.add(dateInput = Components.input.date().build())
 				.add(Components.button("Dodaj", e -> {
 					listing.addPresenceCheck(dateInput.getValue());
@@ -49,17 +46,20 @@ public class SchoolPresenceEditDialog extends AbstractDialog implements QueryCon
 					listing.setSizeFull();
 					hl.add(listing);
 				}))
-				.build());
+				.build())
+			.addAndExpand(
+				hl = Components.hl().fullSize()
+				.add(listing)
+				.build(), 1)
+			.add(
+				Components.hl().fullWidth()
+					.add(Components.button()
+							.text("Zamknij")
+							.onClick(evt -> {close();})
+							.build())
+					.build()).build());
 		
-		add(hl = Components.hl()
-				.fullWidth()
-				.addAndExpand(listing,1)
-				.build()
-				);
-		add(Components.hl().fullWidth()
-				.add(Components.button().text("Zamknij").onClick(evt -> {close();}).build()).build());
 		addDetachListener(e -> close());
-		//addDialogCloseActionListener(e -> new DialogCloseActionEvent(this, autoAddedToTheUi));
 	}
 	
 @Override

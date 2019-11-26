@@ -39,30 +39,35 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 		
 		//Notification.show("ClassId: " + classID + " subjectId: " + subjectId, 10000, Position.BOTTOM_CENTER);
 		
-		listing = Components.listing.properties(SchoolClassStudents.CLASSSTUDENTS).styleName("storefront")
+		listing = Components.listing.properties(SchoolClassStudents.CLASSSTUDENTS).styleName("storefront").fullSize()
+				.displayAfter(SchoolClassStudents.ID, SchoolClassStudents.STUDENT_SURNAME)
 				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
-				.resizable(false)
+				.resizable(true)
 				.header(SchoolClassStudents.ID, "Oceny")
-				.visibleColumns(SchoolClassStudents.ID)
+				.hidden(SchoolClassStudents.STUDENTID)
+				.hidden(SchoolClassStudents.CLASSID)
+				
 				.renderer(SchoolClassStudents.ID, new GradesRenderer(gradesRenderers,classID,subjectId))
 				.dataSource(datastore, SchoolClassStudents.TARGET)
 				.withQueryConfigurationProvider(this)
 				.withDefaultQuerySort(SchoolClassStudents.ID.asc())
 				.selectionMode(SelectionMode.NONE)
-				.sizeUndefined()
-				.withItemClickListener(evt -> 
-				{
-					
-				}).build();
-		add(Components.hl()
-				.fullWidth()
+.build();
+		
+		add(Components.vl().fullSize()
+		.addAndExpand(Components.hl().fullSize()
 				.addAndExpand(listing,1)
-				.build()
-				);
-		add(Components.hl().fullWidth()
-				.add(Components.button().text("Zamknij").onClick(evt -> {close();}).build()).build());
+				.build(),1)
+		.add(Components.hl().fullWidth()
+				.add(Components.button()
+						.text("Zamknij")
+						.onClick(evt -> {close();})
+						.build())
+				.build())
+		.build()
+		);
+
 		addDetachListener(e -> close());
-		//addDialogCloseActionListener(e -> new DialogCloseActionEvent(this, autoAddedToTheUi));
 	}
 	
 @Override

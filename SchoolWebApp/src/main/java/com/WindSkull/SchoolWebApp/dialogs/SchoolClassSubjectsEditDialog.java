@@ -17,6 +17,8 @@ import com.holonplatform.vaadin.flow.components.SingleSelect;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 
 public class SchoolClassSubjectsEditDialog extends AbstractDialog implements QueryConfigurationProvider{
 
@@ -70,15 +72,19 @@ public class SchoolClassSubjectsEditDialog extends AbstractDialog implements Que
 			.set(SchoolClassSubject.CLASSID, classID) 
 			.set(SchoolClassSubject.TEACHERID,teacherSelect.getSelectedItem().get()) 
 			.set(SchoolClassSubject.SUBJECTID ,subjectSelect.getSelectedItem().get()).build();
-			classSubjectsService.save(newClassSubject);
-			propertyListing.refresh();
+			if(!classSubjectsService.getClassSubjectId(classID, teacherSelect.getSelectedItem().get(), subjectSelect.getSelectedItem().get()).isPresent())
+			{
+				classSubjectsService.save(newClassSubject);
+				propertyListing.refresh();
+			}
+			else
+				Notification.show("Taki zestaw danych ju¿ istnieje", 5000, Position.BOTTOM_CENTER);
 			
 		});
 		
 		
 		
-		propertyListing = PropertyListing.builder(SchoolClassSubject.CLASSSUBJECT)
-				.editorBuffered(true) 
+		propertyListing = PropertyListing.builder(SchoolClassSubject.CLASSSUBJECT).fullSize()
 				.dataSource(datastore, SchoolClassSubject.TARGET).withQueryConfigurationProvider(this)
 				.withDefaultQuerySort(SchoolClassSubject.ID.asc())
 				.hidden(SchoolClassSubject.ID)
@@ -99,18 +105,19 @@ public class SchoolClassSubjectsEditDialog extends AbstractDialog implements Que
 						.build()
 						).add()
 				.build();
-		
-		add(Components.hl().fullWidth()
-				.addAndExpand(teacherSelect, 2)
-				.spacing()
-				.addAndExpand(subjectSelect, 2)
-				.spacing()
-				.add(btnAddSubject)
-				.build());
-		
-		add(Components.hl().fullWidth().add(propertyListing).build());
-		add(Components.hl().fullWidth()
-				.add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build());
+		add(Components.vl().fullSize()
+			.add(Components.hl().fullWidth()
+					.addAndExpand(teacherSelect, 2)
+					.spacing()
+					.addAndExpand(subjectSelect, 2)
+					.spacing()
+					.add(btnAddSubject)
+					.build())
+			.addAndExpand(Components.hl().fullSize()
+					.add(propertyListing).build(),1)
+			.add(Components.hl().fullWidth()
+					.add(Components.button().text("Zamknij").onClick(evt -> close()).build()).build())
+		.build());
 		
 		veryfiNewSubjectButton();
 	}

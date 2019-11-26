@@ -15,26 +15,24 @@ public abstract class AbstractDialog extends Dialog implements HasTheme {
 	public AbstractDialog() {
 		// default size
 		//this.setSizeFull();
-		setWidth("1100px");
+		
+		setHeight("calc(90vh - (2*var(--lumo-space-m)))");
+		setWidth("calc(90vw - (4*var(--lumo-space-m)))");
+		//setWidth("1100px");
 		//setHeight("600px");
 		//setMinWidth("700px");
 		// custome css style
-		getThemeNames().add("orders");
+		/*getThemeNames().add("orders");
 		// make content scrollable
 		content = Components.div().build();
 		content.setSizeFull();
 		content.getStyle().set("overflow", "auto");
 
-		add(content);
+		add(content);*/
 	}
 
 	protected void setContent(Component component) {
 		content.add(component);
 	}
-	
-	
-	public void addContent()
-	{
-		
-	}
+
 }

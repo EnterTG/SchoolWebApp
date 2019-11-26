@@ -76,7 +76,7 @@ public class PresenceForm extends HorizontalLayout{
 		
 		presenceTable = new Grid<>();
 		presenceTable.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_ROW_STRIPES);
-		presenceTable.setSizeUndefined();
+		presenceTable.setSizeFull();
 		presenceTable.setItems(studentsPresenceClassList);
 		
 		presenceTable.addColumn(StudentPresence::getName).setResizable(true).setWidth("250px").setHeader("Student");
