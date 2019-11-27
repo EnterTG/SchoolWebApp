@@ -32,15 +32,9 @@ public interface SchoolClassStudents
 		return ds.query(SchoolStudent.TARGET).filter(SchoolStudent.ID.eq(propertyBox.getValue(SchoolClassStudents.STUDENTID)))
 				.findOne(SchoolStudent.SURNAME).orElse("SURNAME error");
 	}).message(SchoolStudent.SURNAME_MESSAGE);
-	/*
-	public static final VirtualProperty<String> STUDENT_INDEX = VirtualProperty.create(String.class, propertyBox -> {
-		Datastore ds = Context.get().resource(Datastore.class)
-				.orElseThrow(() -> new IllegalStateException("Cannot retrieve Datastore from Context."));
-		return ds.query(SchoolStudent.TARGET).filter(SchoolStudent.ID.eq(propertyBox.getValue(SchoolClassStudents.STUDENTID)))
-				.findOne(SchoolStudent.BOOKID).orElse("BOOKID error");
-	}).message(SchoolStudent.BOOKID_MESSAGE);*/
+
 	public static final PropertySet<?> CLASSSTUDENTS = PropertySet
-			.builderOf(ID, STUDENTID, CLASSID,STUDENT_NAME,STUDENT_SURNAME/*,STUDENT_INDEX */).identifier(ID).build();
+			.builderOf( STUDENTID, CLASSID,STUDENT_NAME,STUDENT_SURNAME,ID/*,STUDENT_INDEX */).identifier(ID).build();
 
 	
 	public static final DataTarget<?> TARGET = DataTarget.named("classstudents");

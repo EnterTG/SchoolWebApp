@@ -7,12 +7,14 @@ import com.WindSkull.SchoolWebApp.models.SchoolClassStudents;
 import com.WindSkull.SchoolWebApp.models.SchoolGrade;
 import com.WindSkull.SchoolWebApp.services.SchoolGradeService;
 import com.holonplatform.core.Context;
+import com.holonplatform.core.internal.Logger;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.flow.components.Components;
 import com.holonplatform.vaadin.flow.components.Input;
 import com.holonplatform.vaadin.flow.components.PropertyInputForm;
 import com.holonplatform.vaadin.flow.components.builders.HorizontalLayoutBuilder;
 import com.holonplatform.vaadin.flow.components.builders.PropertyInputFormBuilder;
+import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,7 +33,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	
 	private Integer classId;
 	private Integer subjectId;
-	private Long studentId;
+	//private Long studentId;
 	
 	
 	private List<PropertyInputForm> propertyBoxs= new ArrayList<>();
@@ -49,11 +51,11 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		schoolGradeService = Context.get().resource(SchoolGradeService.class)
 				.orElseThrow(() -> new IllegalStateException("Cannot retrieve SchoolGradeService from Context."));
 		
-		studentId = item.getValue(SchoolClassStudents.STUDENTID);
+		Long studentId = item.getValue(SchoolClassStudents.STUDENTID);
 		
 		//Notification.show("classId: " + classId + " subjectId: " + subjectId + " studentId: " + studentId, 10000, Position.BOTTOM_CENTER);
 		
-		List<PropertyInputForm> propertList = getGradesList();
+		List<PropertyInputForm> propertList = getGradesList(studentId);
 		HorizontalLayoutBuilder grades = Components.hl();
 	
 		propertList.forEach(p -> {grades.add(Components.div().width("5px").build());grades.add(p);});
@@ -66,7 +68,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 						.icon(VaadinIcon.PLUS)
 						.onClick(e -> 
 							{
-								PropertyInputForm pif = getInputForm(PropertyBox.builder(SchoolGrade.GRADES).build());
+								PropertyInputForm pif = getInputForm(PropertyBox.builder(SchoolGrade.GRADES).build(),studentId);
 								ghl.add(Components.div().width("5px").build());
 								ghl.add(pif.getComponent());
 								//Notification.show("Pro: " + pif.getValue().getValue(SchoolGrade.CLASSID), 10000, Position.BOTTOM_CENTER);
@@ -81,21 +83,22 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	}
 	public void save()
 	{
-		//propertyBoxs.forEach(p -> Notification.show("Pro: " +p.getValue().getValue(SchoolGrade.GRADE), 10000, Position.BOTTOM_CENTER));
+		com.vaadin.external.org.slf4j.Logger logger = LoggerFactory.getLogger(GradesRenderer.class);
+		propertyBoxs.forEach(p -> logger.error(p.getValue().toString())) ;
 		propertyBoxs.forEach(p -> schoolGradeService.save(p.getValue()));
 	}
 	
-	private List<PropertyInputForm> getGradesList()
+	private List<PropertyInputForm> getGradesList(Long studentId)
 	{
 		List<PropertyBox> gradesBox = schoolGradeService.getGrades(studentId, classId, subjectId);
 		List<PropertyInputForm> gradesInput = new ArrayList<PropertyInputForm>();
 		
-		gradesBox.stream().forEach( g -> gradesInput.add(getInputForm(g)));
+		gradesBox.stream().forEach( g -> gradesInput.add(getInputForm(g,studentId)));
 		
 		return gradesInput;
 	}
 	
-	private PropertyInputForm getInputForm(PropertyBox grade)
+	private PropertyInputForm getInputForm(PropertyBox grade,Long studentId)
 	{
 		grade.setValue(SchoolGrade.STUDENTID, studentId);
 		grade.setValue(SchoolGrade.CLASSID, classId);
@@ -106,17 +109,6 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		Input<String> gradeInput = Components.input.string().withValue("1").width("40px").maxWidth("40px")
 		//.preventInvalidInput().pattern("|1[0-5]?|[2-9]")
 		.withThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER)
-		/*.prefixComponent(
-				Components.button().icon(VaadinIcon.MINUS)
-				.withThemeVariants(ButtonVariant.LUMO_ICON,ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY).maxWidth("20px")
-				.onClick(evt -> 
-					{
-						
-					
-					}
-				)
-				.build()
-		)*/
 		.build();
 		
 		

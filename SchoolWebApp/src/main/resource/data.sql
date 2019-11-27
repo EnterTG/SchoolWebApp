@@ -23,33 +23,10 @@ insert into classes (id, name,semester,classtype,createyear) VALUES (1, 'Class1'
 insert into classstudents (id, studentid,classid) VALUES (1,1,1);
 insert into classstudents (id, studentid,classid) VALUES (2,2,1);
 insert into classstudents (id, studentid,classid) VALUES (3,5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
 
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
-insert into classstudents ( studentid,classid) VALUES (5,1);
+insert into grades (studentid,classid,subjectid,grade) VALUES (1,1,1,'5');
+insert into grades (studentid,classid,subjectid,grade) VALUES (2,1,1,'4');
+insert into grades (studentid,classid,subjectid,grade) VALUES (5,1,1,'3');
 
 insert into subjects (id, name) VALUES (1,'Test subject');
 

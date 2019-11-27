@@ -40,19 +40,24 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 		//Notification.show("ClassId: " + classID + " subjectId: " + subjectId, 10000, Position.BOTTOM_CENTER);
 		
 		listing = Components.listing.properties(SchoolClassStudents.CLASSSTUDENTS).styleName("storefront").fullSize()
-				.displayAfter(SchoolClassStudents.ID, SchoolClassStudents.STUDENT_SURNAME)
 				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 				.resizable(true)
-				.header(SchoolClassStudents.ID, "Oceny")
 				.hidden(SchoolClassStudents.STUDENTID)
 				.hidden(SchoolClassStudents.CLASSID)
-				
+				.header(SchoolClassStudents.ID, "Oceny")
 				.renderer(SchoolClassStudents.ID, new GradesRenderer(gradesRenderers,classID,subjectId))
 				.dataSource(datastore, SchoolClassStudents.TARGET)
 				.withQueryConfigurationProvider(this)
+				.flexGrow(SchoolClassStudents.ID, 1)
+				
 				.withDefaultQuerySort(SchoolClassStudents.ID.asc())
 				.selectionMode(SelectionMode.NONE)
-.build();
+				.expand(SchoolClassStudents.ID)
+				.width(SchoolClassStudents.STUDENT_NAME, "150px")
+				.width(SchoolClassStudents.STUDENT_SURNAME, "150px")
+				.pageSize(25)
+				//.displayAfter(SchoolClassStudents.ID, SchoolClassStudents.STUDENT_SURNAME)
+				.build();
 		
 		add(Components.vl().fullSize()
 		.addAndExpand(Components.hl().fullSize()
