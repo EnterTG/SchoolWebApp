@@ -20,7 +20,6 @@ import com.holonplatform.vaadin.flow.navigator.Navigator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -66,8 +65,7 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 
 		authContext.addAuthenticationListener(this);
 
-		Image holonLogo = new Image("frontend/images/holon-logo.png", "Holon Logo");
-		holonLogo.setWidth("80%");
+		
 
 		Label lblArtisan = new Label();
 		lblArtisan.getElement().setProperty("innerHTML", "Szko³a");
@@ -110,7 +108,7 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 									logout();
 								}).build())
 						.build())
-				.add(Components.vl().withoutPadding().add(holonLogo).align(holonLogo, Alignment.CENTER).build())
+				
 				.justifyContentMode(JustifyContentMode.BETWEEN).align(lblArtisan, Alignment.CENTER).build();
 
 		add(vl);
