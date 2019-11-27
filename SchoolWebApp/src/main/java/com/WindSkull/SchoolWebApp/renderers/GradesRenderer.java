@@ -1,20 +1,19 @@
 package com.WindSkull.SchoolWebApp.renderers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.WindSkull.SchoolWebApp.models.SchoolClassStudents;
 import com.WindSkull.SchoolWebApp.models.SchoolGrade;
 import com.WindSkull.SchoolWebApp.services.SchoolGradeService;
 import com.holonplatform.core.Context;
-import com.holonplatform.core.internal.Logger;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.flow.components.Components;
 import com.holonplatform.vaadin.flow.components.Input;
 import com.holonplatform.vaadin.flow.components.PropertyInputForm;
 import com.holonplatform.vaadin.flow.components.builders.HorizontalLayoutBuilder;
 import com.holonplatform.vaadin.flow.components.builders.PropertyInputFormBuilder;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -36,13 +35,13 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	//private Long studentId;
 	
 	
-	private List<PropertyInputForm> propertyBoxs= new ArrayList<>();
+	private HashMap<Long,List<PropertyInputForm>> propertyBoxs= new HashMap<>();
 	
-	public GradesRenderer(List<GradesRenderer> listrenderers , Integer classId,Integer subjectId) 
+	public GradesRenderer( Integer classId,Integer subjectId) 
 	{
 		this.classId = classId;
 		this.subjectId = subjectId;
-		listrenderers.add(this);
+		
 	}
 
 	@Override
@@ -54,8 +53,9 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		Long studentId = item.getValue(SchoolClassStudents.STUDENTID);
 		
 		//Notification.show("classId: " + classId + " subjectId: " + subjectId + " studentId: " + studentId, 10000, Position.BOTTOM_CENTER);
-		
+		propertyBoxs.put(studentId, new ArrayList<>());
 		List<PropertyInputForm> propertList = getGradesList(studentId);
+		
 		HorizontalLayoutBuilder grades = Components.hl();
 	
 		propertList.forEach(p -> {grades.add(Components.div().width("5px").build());grades.add(p);});
@@ -83,13 +83,14 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	}
 	public void save()
 	{
-		com.vaadin.external.org.slf4j.Logger logger = LoggerFactory.getLogger(GradesRenderer.class);
-		propertyBoxs.forEach(p -> logger.error(p.getValue().toString())) ;
-		propertyBoxs.forEach(p -> schoolGradeService.save(p.getValue()));
+		//com.vaadin.external.org.slf4j.Logger logger = LoggerFactory.getLogger(GradesRenderer.class);
+		//propertyBoxs.values().forEach(pe -> pe.forEach(p -> logger.error(p.getValue().toString()))) ;
+		propertyBoxs.values().forEach(pe -> pe.forEach(p -> schoolGradeService.save(p.getValue())));
 	}
 	
 	private List<PropertyInputForm> getGradesList(Long studentId)
 	{
+		
 		List<PropertyBox> gradesBox = schoolGradeService.getGrades(studentId, classId, subjectId);
 		List<PropertyInputForm> gradesInput = new ArrayList<PropertyInputForm>();
 		
@@ -100,6 +101,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 	
 	private PropertyInputForm getInputForm(PropertyBox grade,Long studentId)
 	{
+		
 		grade.setValue(SchoolGrade.STUDENTID, studentId);
 		grade.setValue(SchoolGrade.CLASSID, classId);
 		grade.setValue(SchoolGrade.SUBJECTID, subjectId);
@@ -123,7 +125,7 @@ public class GradesRenderer extends ComponentRenderer<HorizontalLayout, Property
 		PropertyInputForm pif = fb.build();
 		
 		pif.setValue(grade);
-		propertyBoxs.add(pif);
+		propertyBoxs.get(studentId).add(pif);
 		
 		return pif;
 	}

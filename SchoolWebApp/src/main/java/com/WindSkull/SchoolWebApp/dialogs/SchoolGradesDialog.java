@@ -1,8 +1,5 @@
 package com.WindSkull.SchoolWebApp.dialogs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.WindSkull.SchoolWebApp.models.SchoolClassStudents;
 import com.WindSkull.SchoolWebApp.renderers.GradesRenderer;
 import com.holonplatform.core.Context;
@@ -27,7 +24,9 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 	private Integer classID;
 	//private Integer subjectID;
 	
-	private List<GradesRenderer> gradesRenderers = new ArrayList<>();
+	private GradesRenderer gradesRenderers;
+	
+	private boolean saveOperation = false;
 	
 	public SchoolGradesDialog(Integer classID,Integer subjectId)
 	{
@@ -45,7 +44,7 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 				.hidden(SchoolClassStudents.STUDENTID)
 				.hidden(SchoolClassStudents.CLASSID)
 				.header(SchoolClassStudents.ID, "Oceny")
-				.renderer(SchoolClassStudents.ID, new GradesRenderer(gradesRenderers,classID,subjectId))
+				.renderer(SchoolClassStudents.ID,gradesRenderers = new GradesRenderer(classID,subjectId))
 				.dataSource(datastore, SchoolClassStudents.TARGET)
 				.withQueryConfigurationProvider(this)
 				.flexGrow(SchoolClassStudents.ID, 1)
@@ -75,17 +74,21 @@ public class SchoolGradesDialog extends AbstractDialog implements QueryConfigura
 		addDetachListener(e -> close());
 	}
 	
-@Override
-protected void onDetach(DetachEvent detachEvent) {
-	// TODO Auto-generated method stub
-	super.onDetach(detachEvent);
-	close();
-}
+	@Override
+	protected void onDetach(DetachEvent detachEvent) {
+		// TODO Auto-generated method stub
+		super.onDetach(detachEvent);
+		close();
+	}
 	@Override
 	public void close() 
 	{
 		super.close();
-		gradesRenderers.forEach(r -> r.save());
+		if(!saveOperation) 
+		{
+			saveOperation = true;
+			gradesRenderers.save();
+		}
 	}
 	
 	@Override
