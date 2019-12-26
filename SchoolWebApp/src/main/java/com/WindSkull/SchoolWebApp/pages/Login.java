@@ -40,16 +40,16 @@ public class Login extends HorizontalLayout {
 				.add(Components.vl().styleName("login-form").withoutPadding().width("30%")
 						.add(Components.vl().styleName("login-logo-background").spacing()
 								.add(Components.h1().text("Twoja szko豉").build())
-								.add(Components.label().sizeUndefined().text("Login: admin Has這: admin")
+								/*.add(Components.label().sizeUndefined().text("Login: admin Has這: admin")
 										.build())
 								.add(Components.label().sizeUndefined().text("Login: nauczyciel Has這: admin")
-										.build())
+										.build())*/
 								.build())
 						.add(Components
 								.vl().fullWidth().styleName(
 										"login-input")
 								.padding().add(
-										usn = ValidatableInput.builder(Components.input.string().label("Username")
+										usn = ValidatableInput.builder(Components.input.string().label("Login")
 												.required().prefixComponent(new Icon(VaadinIcon.USER))
 												.styleName("userfield").blankValuesAsNull(true).fullWidth().build())
 												.validateOnValueChange(
@@ -57,7 +57,7 @@ public class Login extends HorizontalLayout {
 												
 												.withValidator(Validator.notBlank()).build())
 								.add(pwd = ValidatableInput
-										.builder(Components.input.secretString().label("Password").required()
+										.builder(Components.input.secretString().label("Has這").required()
 												.prefixComponent(new Icon(VaadinIcon.LOCK)).styleName("passwordfield")
 												.blankValuesAsNull(true).fullWidth().build())
 										.validateOnValueChange(false).withValidator(Validator.notBlank()).build())

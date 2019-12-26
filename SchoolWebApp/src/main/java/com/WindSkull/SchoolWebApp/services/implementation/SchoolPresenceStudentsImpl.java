@@ -1,6 +1,7 @@
 package com.WindSkull.SchoolWebApp.services.implementation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +15,8 @@ import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.PropertyBox;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 @Service
 public class SchoolPresenceStudentsImpl implements SchoolPresenceStudentsService{
 
@@ -55,7 +58,12 @@ public class SchoolPresenceStudentsImpl implements SchoolPresenceStudentsService
 	@Override
 	public List<PropertyBox> getStudnentsPresence(List<Long> presenceId, Long studentId) {
 		ObjectUtils.argumentNotNull(presenceId, "Missing presenceId");
-		return datastore.query(SchoolPresenceStudents.TARGET).filter(SchoolPresenceStudents.PRESENCEID.in(presenceId).and(SchoolPresenceStudents.STUDENTID.eq(studentId))).list(SchoolPresenceStudents.PRESENCES);
+		//return datastore.query(SchoolPresenceStudents.TARGET).filter(SchoolPresenceStudents.PRESENCEID.in(presenceId).and(SchoolPresenceStudents.STUDENTID.eq(studentId))).list(SchoolPresenceStudents.PRESENCES);
+		
+		List<PropertyBox> p = datastore.query(SchoolPresenceStudents.TARGET).filter(SchoolPresenceStudents.STUDENTID.eq(studentId)).list(SchoolPresenceStudents.PRESENCES);
+		
+		return p.stream().filter(b -> presenceId.contains(b.getValue(SchoolPresenceStudents.PRESENCEID))).collect(Collectors.toList());
+		
 	}
 
 	

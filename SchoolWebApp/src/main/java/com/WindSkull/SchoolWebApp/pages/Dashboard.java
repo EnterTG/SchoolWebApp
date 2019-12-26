@@ -29,6 +29,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -51,11 +53,7 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 	
 	private Long userId;
 	
-	public Dashboard()
-	{
-		super();
-	}
-	
+
 	@PostConstruct
 	private void init() {
 		
@@ -72,7 +70,7 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 				.hidden(SchoolClassSubject.CLASSID)
 				.hidden(SchoolClassSubject.ID)
 				.hidden(SchoolClassSubject.TEACHERID)
-				
+				.withQueryConfigurationProvider(this)
 				.hidden(SchoolClassSubject.SUBJECTID)
 				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 				.selectionMode(SelectionMode.NONE)
@@ -116,17 +114,25 @@ public class Dashboard extends VerticalLayout implements QueryConfigurationProvi
 	public QueryFilter getQueryFilter() 
 	{
 		if(!authContext.isPermitted(UserRole.ADMIN.getRole()))
-			return SchoolClassSubject.TEACHERID.eq(userId);
-		return null;
+			if(userId == null)
+				return SchoolClassSubject.TEACHERID.eq(authContext.getAuthentication().get().getParameter(User.USER_DETAIL_ID, Long.class).get());
+			else
+				return SchoolClassSubject.TEACHERID.eq(userId);
+		else
+			return null;
 	}
 
 	@Override
 	public void onAuthentication(Authentication authentication) {
 		if(authentication != null)
 		{
+			
 			Optional<Long> oUserId = authentication.getParameter(User.USER_DETAIL_ID, Long.class);
 			if(oUserId.isPresent())
 				userId = oUserId.get();
+			
+			
+			propertyListing.refresh();
 		}
 	}
 

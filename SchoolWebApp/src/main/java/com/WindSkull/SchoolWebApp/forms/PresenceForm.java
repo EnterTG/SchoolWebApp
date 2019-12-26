@@ -1,5 +1,6 @@
 package com.WindSkull.SchoolWebApp.forms;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -108,7 +109,7 @@ public class PresenceForm extends HorizontalLayout{
 		classSubjectPresence.setValue(SchoolPresence.SUBJECTID, subjectId);
 		classSubjectPresence.setValue(SchoolPresence.DATE, convertToLocalDateTimeViaInstant(dt));
 		
-		Long newPresenceId = (Long) presenceService.save(classSubjectPresence).getFirstInsertedKey().get();
+		Long newPresenceId = ((BigInteger) presenceService.save(classSubjectPresence).getFirstInsertedKey().get()).longValue();
 		
 		addNewPresenceCheckToStudents(newPresenceId);
 		

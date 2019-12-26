@@ -16,13 +16,13 @@ public interface User {
 	
 	public static final NumericProperty<Long> ID = NumericProperty.create("id", Long.class);
 	public static final StringProperty EMAIL = StringProperty.create("email").message("Email")
-			.withValidator(Validator.notBlank(Localizable.builder().message("Email is required").build()));
+			.withValidator(Validator.notBlank(Localizable.builder().message("email jest wymagany").build()));
 	public static final StringProperty NAME = StringProperty.create("name").message("Nazwa")
-			.withValidator(Validator.notBlank(Localizable.builder().message("User name is required").build()));
+			.withValidator(Validator.notBlank(Localizable.builder().message("Nazwa jest wymagana").build()));
 	public static final StringProperty PASSWORD = StringProperty.create("password").message("Has³o")
-			.withValidator(Validator.notBlank(Localizable.builder().message("Password is required").build()));
+			.withValidator(Validator.notBlank(Localizable.builder().message("Has³o jest wymagane").build()));
 	public static final StringProperty ROLE = StringProperty.create("role").message("Rola")
-			.withValidator(Validator.notBlank(Localizable.builder().message("User role is required").build()));
+			.withValidator(Validator.notBlank(Localizable.builder().message("Rola jest wymagana").build()));
 
 	public static final VirtualProperty<?> USER_ROLE = VirtualProperty.create(String.class, row -> {
 		Datastore ds = Context.get().resource(Datastore.class)
