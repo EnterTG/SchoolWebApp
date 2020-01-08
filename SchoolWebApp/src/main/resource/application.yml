@@ -2,6 +2,6 @@ holon:
   datasource:
     url: "jdbc:mysql://localhost:3306/test"
     username: "windskull"
-    password: "skateshop1809#"
+    password: "test"
 server:
   port: 8080
