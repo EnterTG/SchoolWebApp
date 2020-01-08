@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.WindSkull.SchoolWebApp.models.SchoolGrade;
 import com.WindSkull.SchoolWebApp.services.SchoolGradeService;
@@ -14,7 +15,7 @@ import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.PropertyBox;
-
+@Service
 public class SchoolGradeServiceImpl implements SchoolGradeService{
 
 	@Autowired
@@ -27,14 +28,14 @@ public class SchoolGradeServiceImpl implements SchoolGradeService{
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId) {
+	public List<PropertyBox> getGrades(Long studentId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		return datastore.query(SchoolGrade.TARGET).filter(SchoolGrade.STUDENTID.eq(studentId)).list(SchoolGrade.GRADES);
 	
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId, Integer classId) {
+	public List<PropertyBox> getGrades(Long studentId, Integer classId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		ObjectUtils.argumentNotNull(classId, "Missing class id");
 		return datastore.query(SchoolGrade.TARGET)
@@ -45,7 +46,7 @@ public class SchoolGradeServiceImpl implements SchoolGradeService{
 	}
 
 	@Override
-	public List<PropertyBox> getGrades(Integer studentId, Integer classId, Integer subjectId) {
+	public List<PropertyBox> getGrades(Long studentId, Integer classId, Integer subjectId) {
 		ObjectUtils.argumentNotNull(studentId, "Missing student id");
 		ObjectUtils.argumentNotNull(classId, "Missing class id");
 		ObjectUtils.argumentNotNull(subjectId, "Missing subject id");

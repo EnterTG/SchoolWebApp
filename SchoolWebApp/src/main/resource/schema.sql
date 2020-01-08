@@ -11,48 +11,67 @@ create table roles (
   description varchar(500) not null
 );
 
-create table products (
+create table classtype (
+  id varchar(300) primary key,
+  description varchar(500) not null
+);
+
+create table classes (
   id int auto_increment primary key,
   name varchar(500) not null,
-  price numeric (15,3) not null
+  semester numeric (15,3) not null,
+  classtype varchar(500) not null,
+  createyear int not null
 );
 
-create table pickup_location (
-  id integer primary key,
-  location varchar(1000) not null
-);
-
-create table customers (
+create table classsubjects (
   id bigint auto_increment primary key,
-  fullname varchar(1000) not null,
-  phone_number varchar(1000),
-  details varchar(4000)
+  subjectid int not null,
+  classid int not null,
+  teacherid bigint not null,
 );
 
-create table orders (
+create table students (
   id bigint auto_increment primary key,
-  duedate date not null,
-  duetime time not null,
-  pickup_location integer not null,
-  paid boolean,
-  customer bigint not null,
-  state varchar(1000)
+  name varchar(500) not null,
+  surname varchar(500) not null,
+  bookid varchar(500) not null
+);
+create table classstudents (
+  id bigint auto_increment primary key,
+  studentid bigint not null,
+  classid int not null
 );
 
-create table orderitems (
-  sequence bigint,
-  orderid bigint,
-  quantity bigint not null,
-  product int not null,
-  comment varchar(4000),
-  primary key(sequence, orderid)
+create table grades (
+  id bigint auto_increment primary key,
+  studentid bigint not null,
+  classid int not null,
+  subjectid int not null,
+  grade varchar(500)
 );
 
-create table order_history (
-	order_id bigint not null,
-	id bigint auto_increment not null,
-	message varchar(1000) not null,
-	timestamp timestamp not null, 
-	created_by bigint not null, 
-	primary key (order_id, id)
+create table subjects (
+  id int auto_increment primary key,
+  name varchar(500) not null
+);
+
+create table teachers (
+	id bigint auto_increment primary key,
+	userid bigint not null,
+	classid int not null,
+	subjectid int not null
+);
+
+create table presencestudents (
+	studentid bigint ,
+	presenceid bigint ,
+	presence boolean DEFAULT FALSE
+);
+
+create table presence (
+	id bigint auto_increment primary key,
+	classid int not null,
+	subjectid int not null,
+	date timestamp not null 
 );

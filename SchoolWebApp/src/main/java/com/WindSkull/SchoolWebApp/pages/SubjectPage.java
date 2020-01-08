@@ -5,11 +5,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.WindSkull.SchoolWebApp.components.ManageableForm;
-import com.WindSkull.SchoolWebApp.models.Role;
-import com.WindSkull.SchoolWebApp.models.User;
+import com.WindSkull.SchoolWebApp.models.SchoolSubject;
 import com.WindSkull.SchoolWebApp.root.Menu;
-import com.WindSkull.SchoolWebApp.services.UserService;
-import com.holonplatform.auth.Credentials;
+import com.WindSkull.SchoolWebApp.services.SchoolSubjectService;
 import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.property.PropertyBox;
@@ -32,31 +30,32 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
-@Route(value = UsersPage.USERSPAGE_ROUTE, layout = Menu.class)
-public class UsersPage extends VerticalLayout implements QueryConfigurationProvider, ManageableForm{
+@Route(value = SubjectPage.SUBJECTPAGE_ROUTE, layout = Menu.class)
+public class SubjectPage extends VerticalLayout implements ManageableForm,QueryConfigurationProvider{
 
-	public static final String USERSPAGE_ROUTE = "users";
+	public static final String SUBJECTPAGE_ROUTE = "subject";
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	
 	@Autowired
 	private Datastore datastore;
 	@Autowired
-	private UserService userService;
+	private SchoolSubjectService subjectService;
 
 	private Input<String> searchField;
 	private PropertyListing propertyListing;
 	private PropertyInputForm form;
-	private Input<String> password;
+	
+
+	
 	private Button btnInsertUpdate;
 	private Button btnDelete;
 	private Button btnDiscard;
 
 	private boolean editMode;
+	
 	
 	@PostConstruct
 	public void init() {
@@ -65,13 +64,9 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 				.withValueChangeListener(event -> propertyListing.refresh()).valueChangeMode(ValueChangeMode.EAGER)
 				.build();
 
-		password = Components.input.password().sizeUndefined().build();
-
-		form = Components.input.form(User.USER).hidden(User.ID).hidden(User.USER_ROLE)
-				.bind(User.ROLE,
-						Components.input.singleSelect(Role.ID).dataSource(datastore, Role.TARGET, Role.ROLE)
-								.sizeUndefined().itemCaptionProperty(Role.DESCRIPTION).build())
-				.bind(User.PASSWORD, password).build();
+		form = Components.input.form(SchoolSubject.SUBJECT).hidden(SchoolSubject.ID).build();
+				
+		
 		form.setEnabled(false);
 
 		Components.configure(this).spacing().withoutMargin()
@@ -93,15 +88,15 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 				// horizontal split panel
 				.add(Components.hl().fullSize().spacing()
 						// user listing
-						.addAndExpand(propertyListing = Components.listing.properties(User.USER).fullSize()
-								.resizable(true).dataSource(datastore, User.TARGET).withQueryConfigurationProvider(this)
-								.withDefaultQuerySort(User.EMAIL.asc())
-								.visibleColumns(User.EMAIL, User.NAME, User.USER_ROLE)
+						.addAndExpand(
+								propertyListing = Components.listing.properties(SchoolSubject.SUBJECT).fullSize()
+								.resizable(true).dataSource(datastore, SchoolSubject.TARGET).withQueryConfigurationProvider(this)
+								.withDefaultQuerySort(SchoolSubject.ID.asc())
+								.visibleColumns(SchoolSubject.NAME)
 								.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
 								.selectionMode(SelectionMode.SINGLE).withItemClickListener(evt -> {
 									enableForm(true);
 									form.setValue(evt.getItem());
-									password.clear();
 									btnInsertUpdate.setText("Zaktualizuj");
 									editMode = true;
 								}).build(), 1d)
@@ -136,11 +131,13 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 		btnDelete.setEnabled(enable);
 		btnDiscard.setEnabled(enable);
 		btnInsertUpdate.setEnabled(enable);
+
 	}
 
 	@Override
 	public void clearFields() {
 		form.clear();
+
 	}
 
 	@Override
@@ -149,26 +146,25 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 		PropertyBox pbUser = form.getValue();
 
 		// check already used email
-		String mail = pbUser.getValue(User.EMAIL);
-		if (!editMode) {
-			if (!userService.getUserByEmail(mail).isPresent()) {
-				saveUser(pbUser);
+		String subjectName = pbUser.getValue(SchoolSubject.NAME);
+		if (!editMode) 
+		{
+			if (!subjectService.getSubject(subjectService.getSubjectByName(subjectName)).isPresent()) {
+				saveClass(pbUser);
+				clearFields();
 			} else {
-				Notification.show("Nie mozna uzyc tego e-maila: jest juz w uzyciu", 2000, Position.BOTTOM_CENTER);
+				Notification.show("Przedmiot o podanych parametrach: jest juz w uzyciu", 2000, Position.BOTTOM_CENTER);
 			}
 		} else {
-			saveUser(pbUser);
+			saveClass(pbUser);
+			
 		}
+		
 	}
 
-	private void saveUser(PropertyBox pbUser) {
-		// encode password
-		final String encoded = Credentials.encoder().secret(pbUser.getValue(User.PASSWORD))
-				.hashAlgorithm(Credentials.Encoder.HASH_SHA_512).buildAndEncodeBase64();
+	private void saveClass(PropertyBox pbUser) {
 
-		pbUser.setValue(User.PASSWORD, encoded);
-
-		OperationResult operationResult = userService.save(pbUser);
+		OperationResult operationResult = subjectService.save(pbUser);
 		if (operationResult.getAffectedCount() > 0) {
 			propertyListing.refresh();
 			propertyListing.select(pbUser);
@@ -178,7 +174,7 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 	@Override
 	public void delete() {
 		propertyListing.getFirstSelectedItem().ifPresent(propertyBox -> {
-			OperationResult op = userService.delete(propertyBox);
+			OperationResult op = subjectService.delete(propertyBox);
 			if (op.getAffectedCount() > 0) {
 				propertyListing.refresh();
 				clearFields();
@@ -186,11 +182,12 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 		});
 	}
 
+
+	
 	@Override
 	public void discard() {
 		propertyListing.getFirstSelectedItem().ifPresent(propertyBox -> {
 			form.setValue(propertyBox);
-			password.clear();
 		});
 	}
 
@@ -198,10 +195,9 @@ public class UsersPage extends VerticalLayout implements QueryConfigurationProvi
 	public QueryFilter getQueryFilter() {
 		String searchFilter = searchField.getValue();
 		if (searchFilter != null && !searchFilter.isEmpty()) {
-			return User.NAME.containsIgnoreCase(searchField.getValue() != null ? searchField.getValue() : "")
-					.or(User.EMAIL.containsIgnoreCase(searchField.getValue() != null ? searchField.getValue() : ""));
+			return SchoolSubject.NAME.containsIgnoreCase(searchField.getValue() != null ? searchField.getValue() : "");
 		}
 		return null;
 	}
-
 }
+

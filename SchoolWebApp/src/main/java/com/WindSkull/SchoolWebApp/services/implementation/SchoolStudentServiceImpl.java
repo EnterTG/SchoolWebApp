@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.WindSkull.SchoolWebApp.models.SchoolStudent;
 import com.WindSkull.SchoolWebApp.services.SchoolStudentService;
@@ -14,7 +15,7 @@ import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.datastore.DefaultWriteOption;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.PropertyBox;
-
+@Service
 public class SchoolStudentServiceImpl implements SchoolStudentService{
 
 	@Autowired
@@ -51,7 +52,16 @@ public class SchoolStudentServiceImpl implements SchoolStudentService{
 				.list(SchoolStudent.STUDENT);
 	
 	}
-
+	@Override
+	public Optional<PropertyBox> getStudent(String studentName, String studentSurname, String index) {
+		ObjectUtils.argumentNotNull(studentSurname, "Missing student surname");
+		ObjectUtils.argumentNotNull(studentName, "Missing student name");
+		ObjectUtils.argumentNotNull(index, "Missing student index");
+		return datastore.query(SchoolStudent.TARGET)
+				.filter(SchoolStudent.SURNAME.containsIgnoreCase(studentSurname))
+				.filter(SchoolStudent.NAME.containsIgnoreCase(studentName))
+				.filter(SchoolStudent.BOOKID.containsIgnoreCase(index)).findOne(SchoolStudent.STUDENT);
+	}
 	@Override
 	public Optional<PropertyBox> getStudentByIndex(@NotNull String index) {
 		ObjectUtils.argumentNotNull(index, "Missing student index");
@@ -69,6 +79,8 @@ public class SchoolStudentServiceImpl implements SchoolStudentService{
 		ObjectUtils.argumentNotNull(pbClassItem, "Missing Student PropertyBox in delete");
 		return datastore.delete(SchoolStudent.TARGET, pbClassItem, DefaultWriteOption.BRING_BACK_GENERATED_IDS);
 	}
+
+
 	
 
 }

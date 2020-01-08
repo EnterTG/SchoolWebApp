@@ -1,19 +1,17 @@
 package com.WindSkull.SchoolWebApp.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.holonplatform.core.datastore.Datastore.OperationResult;
 import com.holonplatform.core.property.PropertyBox;
 
-public interface SchoolClassStudentsService {
+public interface SchoolPresenceStudentsService 
+{
 
-	List<PropertyBox> getClassStudentsBox(Integer classId);
-	List<Long> getClassStudents(Integer classid);
 	
-	Optional<Long> getClassStudentsId(Integer classId,Long studentId);
 	
+	List<PropertyBox> getStudnentsPresence(List<Long> presenceId);
+	List<PropertyBox> getStudnentsPresence(List<Long> presenceId,Long studentId);
 	OperationResult save(PropertyBox pbOrderItem);
-
 	OperationResult delete(PropertyBox pbOrderItem);
 }

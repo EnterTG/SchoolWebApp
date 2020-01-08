@@ -3,8 +3,11 @@ package com.WindSkull.SchoolWebApp;
 import java.util.Locale;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.annotation.SessionScope;
 
 import com.WindSkull.SchoolWebApp.models.User;
@@ -19,6 +22,9 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.SessionInitListener;
 
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
 @SpringBootApplication
 public class Application 
 {
@@ -42,6 +48,7 @@ public class Application
 	// Account provider
 	@Bean
 	public AccountProvider accountProvider(Datastore datastore) {
+
 		return userId -> datastore.query().target(User.TARGET).filter(User.EMAIL.eq(userId)).findOne(User.USER)
 				// map the user PropertyBox to an Account
 				.map(user -> Account.builder(userId)

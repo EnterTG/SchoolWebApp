@@ -13,6 +13,8 @@ public interface SchoolStudentService
 	List<PropertyBox> getStudentsByName(String studentName);
 	List<PropertyBox> getStudentsBySurname(String studentSurname);
 	List<PropertyBox> getStudentsByNameSurname(String studentName,String studentSurname);
+	Optional<PropertyBox> getStudent(String studentName,String studentSurname,String index);
+	
 	Optional<PropertyBox> getStudentByIndex(String index);
 	
 	OperationResult save(PropertyBox pbOrderItem);

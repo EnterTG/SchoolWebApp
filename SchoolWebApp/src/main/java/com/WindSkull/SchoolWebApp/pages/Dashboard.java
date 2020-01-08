@@ -1,67 +1,139 @@
 package com.WindSkull.SchoolWebApp.pages;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.WindSkull.SchoolWebApp.dialogs.SchoolGradesDialog;
+import com.WindSkull.SchoolWebApp.dialogs.SchoolPresenceEditDialog;
+import com.WindSkull.SchoolWebApp.enums.UserRole;
+import com.WindSkull.SchoolWebApp.models.SchoolClassSubject;
+import com.WindSkull.SchoolWebApp.models.User;
 import com.WindSkull.SchoolWebApp.root.Menu;
-import com.holonplatform.core.datastore.relational.SubQuery;
+import com.holonplatform.auth.AuthContext;
+import com.holonplatform.auth.Authentication;
+import com.holonplatform.auth.Authentication.AuthenticationListener;
+import com.holonplatform.auth.annotations.Authenticate;
+import com.holonplatform.core.datastore.Datastore;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
+import com.holonplatform.http.HttpHeaders;
 import com.holonplatform.vaadin.flow.components.Components;
 import com.holonplatform.vaadin.flow.components.Input;
-
+import com.holonplatform.vaadin.flow.components.PropertyListing;
+import com.holonplatform.vaadin.flow.components.Selectable.SelectionMode;
+import com.holonplatform.vaadin.flow.components.builders.PropertyListingBuilder.DatastorePropertyListingBuilder;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-
+@Authenticate(schemes = HttpHeaders.SCHEME_BASIC, redirectURI = "login")
 @Route(value = "", layout = Menu.class)
-public class Dashboard extends VerticalLayout {
+public class Dashboard extends VerticalLayout implements QueryConfigurationProvider,AuthenticationListener{
 
 	private static final long serialVersionUID = 1L;
 
+	@Autowired
+	private Datastore datastore;
+	
+	@Autowired
+	private AuthContext authContext;
+	
+	@SuppressWarnings("unused")
 	private Input<String> searchField;
+	
+	private PropertyListing propertyListing;
+	
+	private Long userId;
+	
 
-	public Dashboard() {
-		super();
-		/*StorefrontListing storefrontListing = new StorefrontListing();
-		storefrontListing.setFilterSupplier(() -> buildFilter());
-
-		searchField = Components.input.string().placeholder("Search").prefixComponent(new Icon(VaadinIcon.SEARCH))
+	@PostConstruct
+	private void init() {
+		
+		authContext.addAuthenticationListener(this);
+		
+		searchField = Components.input.string().placeholder("Szukaj").prefixComponent(new Icon(VaadinIcon.SEARCH))
 				.fullWidth().withValueChangeListener(evt -> {
-					storefrontListing.setFilterSupplier(() -> buildFilter());
-					storefrontListing.refresh();
+					
 				}).valueChangeMode(ValueChangeMode.EAGER).build();
-
-		Components.configure(this).fullWidth().spacing().withoutMargin()
-				// horizontal toolbar
-				.add(Components.hl().fullWidth().spacing()
-						// search field
-						.addAndExpand(searchField.getComponent(), 1d)
-						// btn new
-						.add(Components.button().text("New order").styleName("storefront-btn").icon(VaadinIcon.PLUS)
-								.withThemeVariants(ButtonVariant.LUMO_PRIMARY).onClick(event -> {
-									OrderManageDialog omd = new OrderManageDialog(null,
-											storefrontListing.getPropertyListing());
-									omd.open();
-								}).build())
-						.build())
-				.add(storefrontListing).flexGrow(1, storefrontListing);*/
+		
+		DatastorePropertyListingBuilder listingBuilder  = Components.listing
+				.properties(SchoolClassSubject.CLASSSUBJECT)
+				.dataSource(datastore,SchoolClassSubject.TARGET)
+				.hidden(SchoolClassSubject.CLASSID)
+				.hidden(SchoolClassSubject.ID)
+				.hidden(SchoolClassSubject.TEACHERID)
+				.withQueryConfigurationProvider(this)
+				.hidden(SchoolClassSubject.SUBJECTID)
+				.withThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS)
+				.selectionMode(SelectionMode.NONE)
+				.withComponentColumn(
+						item -> 
+						{
+							return Components.hl()
+									.addAndExpand(
+											Components.button().text("Oceny")
+											.onClick(e -> 
+											{
+												SchoolGradesDialog sgd = new SchoolGradesDialog(item.getValue(SchoolClassSubject.CLASSID), item.getValue(SchoolClassSubject.SUBJECTID));sgd.open();
+											})
+											.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
+											.build(), 1)
+									.addAndExpand(
+											Components.button().text("Obecnoœci")
+											.onClick(e -> 
+											{
+												SchoolPresenceEditDialog ped = new SchoolPresenceEditDialog(item.getValue(SchoolClassSubject.CLASSID), item.getValue(SchoolClassSubject.SUBJECTID));
+												ped.open();
+											})
+											.withThemeVariants(ButtonVariant.LUMO_PRIMARY)
+											.build(), 1)
+							.build();
+						}
+				).add()
+				.fullSize();
+		
+		if(!authContext.isPermitted(UserRole.ADMIN.getRole()))
+			listingBuilder.hidden(SchoolClassSubject.TEACHER_NAME);
+		
+		propertyListing = listingBuilder.build();
+		add(Components.hl().fullSize().add(propertyListing).build());
+		
 	}
 
-	/*private QueryFilter buildFilter() {
-		QueryFilter filter = Order.DUE_DATE.goe(LocalDate.now());
+	
+	
+	@Override
+	public QueryFilter getQueryFilter() 
+	{
+		if(!authContext.isPermitted(UserRole.ADMIN.getRole()))
+			if(userId == null)
+				return SchoolClassSubject.TEACHERID.eq(authContext.getAuthentication().get().getParameter(User.USER_DETAIL_ID, Long.class).get());
+			else
+				return SchoolClassSubject.TEACHERID.eq(userId);
+		else
+			return null;
+	}
 
-		// customer filter
-		String customerName = searchField.getValue();
-		if (customerName != null) {
-			QueryFilter customerFilter = SubQuery.create().target(Customer.TARGET).filter(
-					// NB: used to set order alias for Order.customer field!
-					Order.TARGET.property(Order.CUSTOMER).eq(Customer.ID)
-							.and(Customer.FULLNAME.containsIgnoreCase(customerName)))
-					.exists();
-			filter = filter.and(customerFilter);
+	@Override
+	public void onAuthentication(Authentication authentication) {
+		if(authentication != null)
+		{
+			
+			Optional<Long> oUserId = authentication.getParameter(User.USER_DETAIL_ID, Long.class);
+			if(oUserId.isPresent())
+				userId = oUserId.get();
+			
+			
+			propertyListing.refresh();
 		}
-		return filter;
-	}*/
+	}
+
 }

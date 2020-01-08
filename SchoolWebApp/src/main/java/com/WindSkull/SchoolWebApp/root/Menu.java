@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.WindSkull.SchoolWebApp.enums.UserRole;
+import com.WindSkull.SchoolWebApp.pages.ClassPage;
+import com.WindSkull.SchoolWebApp.pages.StudentsPage;
+import com.WindSkull.SchoolWebApp.pages.SubjectPage;
+import com.WindSkull.SchoolWebApp.pages.UsersPage;
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Authentication;
 import com.holonplatform.auth.Authentication.AuthenticationListener;
@@ -16,7 +20,6 @@ import com.holonplatform.vaadin.flow.navigator.Navigator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -62,51 +65,50 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 
 		authContext.addAuthenticationListener(this);
 
-		Image holonLogo = new Image("frontend/images/holon-logo.png", "Holon Logo");
-		holonLogo.setWidth("80%");
+		
 
 		Label lblArtisan = new Label();
-		lblArtisan.getElement().setProperty("innerHTML", "Bakery");
+		lblArtisan.getElement().setProperty("innerHTML", "Szko³a");
 		lblArtisan.getStyle().set("font-size", "xx-large");
 
 		VerticalLayout vl = Components.vl().width("280px").height("100%").styleName("menu")
 				.add(Components.vl().withoutPadding().add(lblArtisan,
 						btnDashboard = Components.button()
-										.text("Strona gÅ‚Ã³wna").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%").onClick(evt -> {
+										.text("Strona g³ówna").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%").onClick(evt -> {
 											Navigator.get().navigateTo("");
 											resetStyles();
 											btnDashboard.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 										}).build(), 
-						btnUsers = Components.button().text("UÅ¼ytkownicy").withThemeVariants(ButtonVariant.LUMO_LARGE)
+						btnUsers = Components.button().text("U¿ytkownicy").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("users");
+									Navigator.get().navigateTo(UsersPage.USERSPAGE_ROUTE);
 									resetStyles();
 									btnUsers.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),
 						btnClass = Components.button().text("Klasy").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("classes");
+									Navigator.get().navigateTo(ClassPage.CLASSPAGE_ROUTE);
 									resetStyles();
 									btnClass.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),
 						btnSubject = Components.button().text("Przedmioty").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("subjects");
+									Navigator.get().navigateTo(SubjectPage.SUBJECTPAGE_ROUTE);
 									resetStyles();
 									btnSubject.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),
 						btnStudents = Components.button().text("Studenci").withThemeVariants(ButtonVariant.LUMO_LARGE)
 								.width("100%").onClick(evt -> {
-									Navigator.get().navigateTo("students");
+									Navigator.get().navigateTo(StudentsPage.STUDENTSPAGE_ROUTE);
 									resetStyles();
 									btnStudents.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 								}).build(),		
-						Components.button().text("Logout").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%")
+						Components.button().text("Wyloguj").withThemeVariants(ButtonVariant.LUMO_LARGE).width("100%")
 								.onClick(evt -> {
 									logout();
 								}).build())
 						.build())
-				.add(Components.vl().withoutPadding().add(holonLogo).align(holonLogo, Alignment.CENTER).build())
+				
 				.justifyContentMode(JustifyContentMode.BETWEEN).align(lblArtisan, Alignment.CENTER).build();
 
 		add(vl);
@@ -130,6 +132,7 @@ public class Menu extends HorizontalLayout implements RouterLayout, Authenticati
 	@Override
 	public void onAuthentication(Authentication authentication) {
 		if (authentication != null) {
+			//Notification.show("Data: " + authentication.getParameter(User.USER_DETAIL_ID, Long.class).get() , 3000, Position.MIDDLE);
 			btnDashboard.setVisible(authContext.isPermittedAny(UserRole.ADMIN.getRole(), UserRole.TEACHER.getRole()));
 			btnUsers.setVisible(authContext.isPermitted(UserRole.ADMIN.getRole()));
 			btnClass.setVisible(authContext.isPermitted(UserRole.ADMIN.getRole()));

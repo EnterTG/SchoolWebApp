@@ -13,11 +13,11 @@ public interface SchoolClassService {
 	Optional<String> getClassName(Integer classId);
 	
 	Optional<PropertyBox> getClass(Integer classId);
-	
+	List<PropertyBox> getClass(String className,LocalDate day,Integer semester);
 	List<PropertyBox> getClassByName(String className);
 	List<PropertyBox> getClassByYear(LocalDate day);
 	List<PropertyBox> getClassByYear(LocalDate from, LocalDate to);
-	
+	List<PropertyBox> getClassBySemester(Integer semester);
 	List<PropertyBox> getAllClasses();
 	
 	OperationResult save(PropertyBox pbOrderItem);
